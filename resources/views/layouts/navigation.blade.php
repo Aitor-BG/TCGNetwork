@@ -11,9 +11,31 @@
                 </div>
 
                 <!-- Navigation Links -->
+                @php
+                    $role = Auth::user()->role;
+                    $route = $role . '.dashboard';
+                    $route2 = $role . '.seg';
+                    $route3 = $role . '.ter';
+                    $route4 = $role . '.cua';
+                @endphp
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                    <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
-                        {{ __('Dashboard') }}
+                    <x-nav-link :href="route($route)" :active="request()->routeIs('$route')">
+                        {{ __('Inicio') }}
+                    </x-nav-link>
+                </div>
+                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                    <x-nav-link :href="route($route2)" :active="request()->routeIs('$route2')">
+                    {{ $role === 'tienda' ? __('Torneos') : __('Mazos') }}
+                    </x-nav-link>
+                </div>
+                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                    <x-nav-link :href="route($route3)" :active="request()->routeIs('$route3')">
+                    {{ $role === 'tienda' ? __('Stock') : __('Tienda') }}
+                    </x-nav-link>
+                </div>
+                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                    <x-nav-link :href="route($route4)" :active="request()->routeIs('$route4')">
+                    {{ $role === 'tienda' ? __('Distribuidora') : __('Carrito') }}
                     </x-nav-link>
                 </div>
             </div>

@@ -32,11 +32,17 @@ Route::middleware('auth')->group(function () {
 
 Route::middleware(['auth','role:tienda'])->group(function () {
     Route::get('/tienda/dashboard', [TiendaController::class, 'TiendaDashboard'])->name('tienda.dashboard');
+    Route::get('/tienda/torneos', [TiendaController::class, 'TiendaSegunda'])->name('tienda.seg');
+    Route::get('/tienda/stock', [TiendaController::class, 'TiendaTercera'])->name('tienda.ter');
+    Route::get('/tienda/distribuidora', [TiendaController::class, 'TiendaCuarta'])->name('tienda.cua');
 
 });
 
 Route::middleware(['auth','role:usuario'])->group(function () {
     Route::get('/usuario/dashboard', [UsuarioController::class, 'UsuarioDashboard'])->name('usuario.dashboard');
+    Route::get('/usuario/mazos', [UsuarioController::class, 'UsuarioSegunda'])->name('usuario.seg');
+    Route::get('/usuario/tienda', [UsuarioController::class, 'UsuarioTercera'])->name('usuario.ter');
+    Route::get('/usuario/carrito', [UsuarioController::class, 'UsuarioCuarta'])->name('usuario.cua');
 });
 
 
