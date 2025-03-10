@@ -18,33 +18,6 @@
                     <div id="calendar"></div>
                 </div>
             </div>
-            <button class="btn btn-primary mt-3" data-bs-toggle="modal" data-bs-target="#ModalAdd">Crear Evento</button>
-        </div>
-
-        <div class="modal fade" id="ModalAdd" tabindex="-1" aria-labelledby="ModalAddLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <form action="{{ route('tienda.events.store') }}" method="POST">
-                        @csrf
-                        <div class="mb-3">
-                            <label for="title" class="form-label">Título del Evento</label>
-                            <input type="text" name="title" id="title" class="form-control" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="start_date" class="form-label">Fecha de Inicio</label>
-                            <input type="datetime-local" name="start_date" id="start_date" class="form-control"
-                                required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="end_date" class="form-label">Fecha de Fin</label>
-                            <input type="datetime-local" name="end_date" id="end_date" class="form-control" required>
-                        </div>
-                        <button type="submit" class="btn btn-primary">Guardar Evento</button>
-                    </form>
-
-
-                </div>
-            </div>
         </div>
 
         <script>

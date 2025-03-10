@@ -14,8 +14,9 @@ class TiendaController extends Controller
         foreach ($all_events as $event) {
             $events[] = [
                 'title' => $event->name,
-                'start' => $event->start_date, // Format as ISO8601 string
-                'end' => $event->end_date, // Format as ISO8601 string
+                'start' => $event->start_date,
+                'end' => $event->end_date,
+                'color' => $event->color,
             ];
         }
 
@@ -36,21 +37,20 @@ class TiendaController extends Controller
 
     public function store(Request $request)
     {
-        // Verificar los datos que recibimos
-        dd($request->all());
     
         // Validación de los datos del formulario
         $validated = $request->validate([
             'title' => 'required|string|max:255',
             'start_date' => 'required|date',
             'end_date' => 'required|date|after_or_equal:start_date',
+            'color' => 'required|string',
         ]);
     
-        // Crear un nuevo evento
         $event = new Event();
         $event->name = $validated['title'];
         $event->start_date = $validated['start_date'];
         $event->end_date = $validated['end_date'];
+        $event->color = $validated['color'];
     
         // Guardar el evento en la base de datos
         $event->save();
