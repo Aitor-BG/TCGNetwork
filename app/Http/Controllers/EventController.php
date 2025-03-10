@@ -1,63 +1,46 @@
 <?php
-
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Event;
 
-class TiendaController extends Controller
+class EventController extends Controller
 {
-    public function TiendaDashboard(){
+    public function index()
+    {
+        $role = Auth::user()->role;
+        $route = $role . '.dashboard';
         $all_events = Event::all();
 
         $events = [];
         foreach ($all_events as $event) {
             $events[] = [
                 'title' => $event->name,
-                'start' => $event->start_date, // Format as ISO8601 string
-                'end' => $event->end_date, // Format as ISO8601 string
+                'start' => $event->start_date->toIso8601String(), // Format as ISO8601 string
+                'end' => $event->end_date->toIso8601String(), // Format as ISO8601 string
             ];
         }
 
         return view('tienda.tienda_dashboard', compact('events'));
     }
 
-    public function TiendaSegunda(){
-        return view("tienda.tienda_torneos");
-    }
-
-    public function TiendaTercera(){
-        return view("tienda.tienda_stock");
-    }
-
-    public function TiendaCuarta(){
-        return view("tienda.tienda_distribuidora");
-    }
-
     public function store(Request $request)
     {
-        // Verificar los datos que recibimos
-        dd($request->all());
-    
-        // Validación de los datos del formulario
+        // Validate the incoming request
         $validated = $request->validate([
             'title' => 'required|string|max:255',
             'start_date' => 'required|date',
             'end_date' => 'required|date|after_or_equal:start_date',
         ]);
-    
-        // Crear un nuevo evento
+
+        // Create a new event
         $event = new Event();
         $event->name = $validated['title'];
         $event->start_date = $validated['start_date'];
         $event->end_date = $validated['end_date'];
-    
-        // Guardar el evento en la base de datos
         $event->save();
-    
-        // Redirigir al dashboard de la tienda
+
+        // Redirect to the dashboard
         return redirect()->route('tienda.dashboard');
     }
-    
-    
 }
