@@ -31,7 +31,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-Route::middleware(['auth','role:tienda'])->group(function () {
+Route::middleware(['auth', 'role:tienda'])->group(function () {
     Route::get('/tienda/dashboard', [TiendaController::class, 'TiendaDashboard'])->name('tienda.dashboard');
     Route::get('/tienda/torneos', [TiendaController::class, 'TiendaSegunda'])->name('tienda.seg');
     Route::get('/tienda/stock', [TiendaController::class, 'TiendaTercera'])->name('tienda.ter');
@@ -39,13 +39,13 @@ Route::middleware(['auth','role:tienda'])->group(function () {
     Route::post('/tienda/torneos/events', [TiendaController::class, 'store'])->name('tienda.events.store');
 });
 
-Route::middleware(['auth','role:usuario'])->group(function () {
+Route::middleware(['auth', 'role:usuario'])->group(function () {
     Route::get('/usuario/dashboard', [UsuarioController::class, 'UsuarioDashboard'])->name('usuario.dashboard');
     Route::get('/usuario/mazos', [UsuarioController::class, 'UsuarioSegunda'])->name('usuario.seg');
     Route::get('/usuario/tienda', [UsuarioController::class, 'UsuarioTercera'])->name('usuario.ter');
     Route::get('/usuario/carrito', [UsuarioController::class, 'UsuarioCuarta'])->name('usuario.cua');
-    Route::post('/events', [EventController::class, 'store'])->name('events.store');
+    Route::post('/usuario/dashboard/inscribir', [UsuarioController::class, 'inscribirEvento'])->name('usuario.inscribir');
 });
 
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';
