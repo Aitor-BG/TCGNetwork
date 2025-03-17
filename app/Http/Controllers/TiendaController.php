@@ -17,6 +17,9 @@ class TiendaController extends Controller
                 'start' => $event->start_date,
                 'end' => $event->end_date,
                 'color' => $event->color,
+                'details' => $event->details,
+                'inscritos' => $event->inscritos,
+                'participantes' => $event->participantes,
             ];
         }
 
@@ -44,6 +47,8 @@ class TiendaController extends Controller
             'start_date' => 'required|date',
             'end_date' => 'required|date|after_or_equal:start_date',
             'color' => 'required|string',
+            'description' => 'required|string',
+            'participantes' => 'required|integer'
         ]);
     
         $event = new Event();
@@ -51,6 +56,8 @@ class TiendaController extends Controller
         $event->start_date = $validated['start_date'];
         $event->end_date = $validated['end_date'];
         $event->color = $validated['color'];
+        $event->details = $validated['description'];
+        $event->participantes = $validated['participantes'];
     
         // Guardar el evento en la base de datos
         $event->save();

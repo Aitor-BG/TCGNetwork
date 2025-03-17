@@ -34,6 +34,16 @@
                     <label for="color" class="form-label">Color del Evento</label>
                     <input type="color" name="color" id="color" class="form-control" value="#000000">
                 </div>
+                <div class="mb-3">
+                    <label for="description" class="form-label">Descripción del evento</label>
+                    <input type="textarea" name="description" id="description" class="form-control"
+                        placeholder="Ingresa descripción del evento" required>
+                </div>
+                <div class="mb-3">
+                    <label for="participantes" class="form-label">Máximos participantes</label>
+                    <input type="number" name="participantes" id="participantes" class="form-control"
+                        placeholder="Ingresa máximo de participantes" required>
+                </div>
                 <div class="d-flex justify-content-end">
                     <button type="submit" class="btn btn-primary">Guardar Evento</button>
                 </div>
