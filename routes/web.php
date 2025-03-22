@@ -44,7 +44,9 @@ Route::middleware(['auth', 'role:usuario'])->group(function () {
     Route::get('/usuario/mazos', [UsuarioController::class, 'UsuarioSegunda'])->name('usuario.seg');
     Route::get('/usuario/tienda', [UsuarioController::class, 'UsuarioTercera'])->name('usuario.ter');
     Route::get('/usuario/carrito', [UsuarioController::class, 'UsuarioCuarta'])->name('usuario.cua');
+    Route::get('/usuario/decks',[UsuarioController::class, 'ObtenerDecks'])->name('usuario.decks');
     Route::post('/usuario/dashboard/inscribir', [UsuarioController::class, 'inscribirEvento'])->name('usuario.inscribir');
+    Route::get('/usuario/decksOP', [UsuarioController::class, 'apiOnePiece'])->name('usuario.decksOP');
 });
 
 

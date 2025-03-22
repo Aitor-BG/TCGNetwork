@@ -75,32 +75,32 @@
                 calendar.render();
 
                 document.getElementById('btnInscribir').addEventListener('click', function () {
-    let eventId = this.getAttribute('data-event-id');
-    console.log("ID del evento:", eventId); // Verifica el ID
+                    let eventId = this.getAttribute('data-event-id');
+                    console.log("ID del evento:", eventId); // Verifica el ID
 
-    fetch("{{ route('usuario.inscribir') }}", {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'X-CSRF-TOKEN': '{{ csrf_token() }}'
-        },
-        body: JSON.stringify({ event_id: eventId })
-    })
-    .then(response => response.text())
-    .then(data => {
-        console.log("Respuesta del servidor:", data);
-        return JSON.parse(data);
-    })
-    .then(data => {
-        if (data.success) {
-            alert(data.success);
-            location.reload();
-        } else {
-            alert(data.error);
-        }
-    })
-    .catch(error => console.error('Error:', error));
-});
+                    fetch("{{ route('usuario.inscribir') }}", {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                        },
+                        body: JSON.stringify({ event_id: eventId })
+                    })
+                        .then(response => response.text())
+                        .then(data => {
+                            console.log("Respuesta del servidor:", data);
+                            return JSON.parse(data);
+                        })
+                        .then(data => {
+                            if (data.success) {
+                                alert(data.success);
+                                location.reload();
+                            } else {
+                                alert(data.error);
+                            }
+                        })
+                        .catch(error => console.error('Error:', error));
+                });
 
             });
         </script>

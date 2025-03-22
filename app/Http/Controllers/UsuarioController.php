@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Http;
 use App\Models\Event;
 
 class UsuarioController extends Controller
@@ -37,6 +38,32 @@ class UsuarioController extends Controller
 
     public function UsuarioCuarta(){
         return view("usuario.usuario_carrito");
+    }
+
+    public function obtenerDecks(){
+        return view("usuario.usuario_decks");
+    }
+
+    public function apiOnePiece(Request $request)
+    {
+        // Parámetros de paginación
+        $page = $request->input('page', 1); // Por defecto, comenzamos en la página 1
+        $limit = 30; // Mostramos 30 cartas por página (6 filas x 5 columnas)
+
+        // La URL de la API con los parámetros de paginación
+        $url = 'https://apitcg.com/api/one-piece/cards?limit=' . $limit . '&page=' . $page;
+
+        // Hacemos la solicitud con el encabezado de la API
+        $respuesta = Http::withHeaders([
+            'x-api-key' => env('API_KEY'),
+        ])->get($url);
+
+        if ($respuesta->successful()) {
+            $datos = $respuesta->json(); // Convertimos la respuesta a un array
+            return view('usuario.usuario_decksOP', compact('datos', 'page', 'limit')); // Pasamos los datos, la página y el límite a la vista
+        } else {
+            return response()->json(['error' => 'Error al conectarse con la API'], 500);
+        }
     }
     public function inscribirEvento(Request $request)
     {

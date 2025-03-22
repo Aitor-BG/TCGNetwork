@@ -11,14 +11,16 @@ class TiendaController extends Controller
         $all_events = Event::all();
 
         $events = [];
+
         foreach ($all_events as $event) {
+            $inscritos = $event->inscritos ? explode(',', $event->inscritos) : [];
             $events[] = [
                 'title' => $event->name,
                 'start' => $event->start_date,
                 'end' => $event->end_date,
                 'color' => $event->color,
                 'details' => $event->details,
-                'inscritos' => $event->inscritos,
+                'inscritos' => count($inscritos),
                 'participantes' => $event->participantes,
             ];
         }
