@@ -37,6 +37,7 @@ Route::middleware(['auth', 'role:tienda'])->group(function () {
     Route::get('/tienda/stock', [TiendaController::class, 'TiendaTercera'])->name('tienda.ter');
     Route::get('/tienda/distribuidora', [TiendaController::class, 'TiendaCuarta'])->name('tienda.cua');
     Route::post('/tienda/torneos/events', [TiendaController::class, 'store'])->name('tienda.events.store');
+    Route::post('/tienda/torneos/eliminar', [TiendaController::class, 'eliminar'])->name('tienda.events.eliminar');
 });
 
 Route::middleware(['auth', 'role:usuario'])->group(function () {

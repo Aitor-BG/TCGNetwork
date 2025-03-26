@@ -35,7 +35,8 @@
                         <p><strong>Participantes:</strong> <span id="eventInsc"></span>/<span id="eventPart"></span></p>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Eliminar Evento</button>
+                        <button type="button" class="btn btn-secondary" href="{{ route('tienda.events.eliminar') }}" data-bs-dismiss="modal">Cerrar</button>
                     </div>
                 </div>
             </div>
