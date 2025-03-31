@@ -68,9 +68,21 @@ class TiendaController extends Controller
         return redirect()->route('tienda.dashboard');
     }
     
-    public function eliminar(Request $request){
-        $event= Event::find($request->id);
-        $event->delete();
-        return redirect()->route('tienda.dashboard');
-    }
+    /*public function eliminar($id)
+    {
+        // Encontrar el evento por su ID
+        $evento = Event::find($id);
+    
+        if (!$evento) {
+            return response()->json(['success' => false, 'message' => 'Evento no encontrado'], 404);
+        }
+    
+        // Eliminar el evento
+        $evento->delete();
+    
+        // Retornar una respuesta exitosa
+        return response()->json(['success' => true, 'message' => 'Evento eliminado']);
+    }*/
+    
+    
 }

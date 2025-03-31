@@ -26,7 +26,7 @@
                 </div>
                 <div class="col d-flex justify-content-center">
                     <div class="card text-center" style="width: 18rem;">
-                        <img src="{{ asset('images/logo_pk.png') }}" class="card-img-top" alt="...">
+                        <img src="{{ asset('images/logo_db.png') }}" class="card-img-top" alt="...">
                         <div class="card-body">
                             <h5 class="card-title">Dragon Ball: Fusion World</h5>
                             <a href="/usuario/decks" class="btn btn-primary">Ver Mazos</a>
@@ -37,10 +37,10 @@
             <div class="row">
                 <div class="col d-flex justify-content-center">
                     <div class="card text-center" style="width: 18rem;">
-                        <img src="{{ asset('images/logo_op.png') }}" class="card-img-top" alt="...">
+                        <img src="{{ asset('images/logo_dg.png') }}" class="card-img-top" alt="...">
                         <div class="card-body">
                             <h5 class="card-title">Digimon</h5>
-                            <a href="/usuario/decksOP" class="btn btn-primary">Ver Mazos</a>
+                            <a href="/usuario/decks" class="btn btn-primary">Ver Mazos</a>
                         </div>
                     </div>
                 </div>

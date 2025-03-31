@@ -43,6 +43,67 @@
             </div>
         </div>
 
+        <!--<script>
+                    document.addEventListener('DOMContentLoaded', function () {
+                var calendarEl = document.getElementById('calendar');
+
+                var calendar = new FullCalendar.Calendar(calendarEl, {
+                    initialView: 'dayGridMonth',
+                    headerToolbar: { left: 'prev', center: 'title', right: 'next' },
+                    events: @json($events),
+            locale: 'es',
+                firstDay: 1,
+                    eventClick: function (info) {
+                        var event = info.event;
+                        document.getElementById('eventTitle').textContent = event.title;
+                        document.getElementById('eventDescription').textContent = event.extendedProps.details || 'Sin descripción';
+                        document.getElementById('eventDate').textContent = event.start.toLocaleString();
+
+                        let inscritos = event.extendedProps.inscritos ? event.extendedProps.inscritos.split(',') : [];
+                        document.getElementById('eventInsc').textContent = inscritos.length;
+                        document.getElementById('eventPart').textContent = event.extendedProps.participantes || 'Determinado en tienda';
+
+                        document.getElementById('btnInscribir').setAttribute('data-event-id', event.id);
+
+                        console.log(event.id)
+
+                        var myModal = new bootstrap.Modal(document.getElementById('eventModal'));
+                        myModal.show();
+                    }
+                });
+
+            calendar.render();
+
+            document.getElementById('btnInscribir').addEventListener('click', function () {
+                let eventId = this.getAttribute('data-event-id');
+                console.log("ID del evento:", eventId); // Verifica el ID
+
+                fetch("{{ route('usuario.inscribir') }}", {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    },
+                    body: JSON.stringify({ event_id: eventId })
+                })
+                    .then(response => response.text())
+                    .then(data => {
+                        console.log("Respuesta del servidor:", data);
+                        return JSON.parse(data);
+                    })
+                    .then(data => {
+                        if (data.success) {
+                            alert(data.success);
+                            location.reload();
+                        } else {
+                            alert(data.error);
+                        }
+                    })
+                    .catch(error => console.error('Error:', error));
+            });
+
+            });
+        </script>-->
         <script>
             document.addEventListener('DOMContentLoaded', function () {
                 var calendarEl = document.getElementById('calendar');
@@ -65,7 +126,17 @@
 
                         document.getElementById('btnInscribir').setAttribute('data-event-id', event.id);
 
-                        console.log(event.id)
+                        // Verificar si el usuario ya está inscrito
+                        let username = '{{ auth()->user()->username }}'; // Obtén el username del usuario autenticado
+                        if (inscritos.includes(username)) {
+                            document.getElementById('btnInscribir').textContent = 'Desinscribirme';
+                            document.getElementById('btnInscribir').classList.remove('btn-success');
+                            document.getElementById('btnInscribir').classList.add('btn-danger');
+                        } else {
+                            document.getElementById('btnInscribir').textContent = 'Inscribirme';
+                            document.getElementById('btnInscribir').classList.remove('btn-danger');
+                            document.getElementById('btnInscribir').classList.add('btn-success');
+                        }
 
                         var myModal = new bootstrap.Modal(document.getElementById('eventModal'));
                         myModal.show();
@@ -86,23 +157,27 @@
                         },
                         body: JSON.stringify({ event_id: eventId })
                     })
-                        .then(response => response.text())
+                        .then(response => response.json()) // Cambiado a json para manejar la respuesta correctamente
                         .then(data => {
                             console.log("Respuesta del servidor:", data);
-                            return JSON.parse(data);
-                        })
-                        .then(data => {
+
                             if (data.success) {
                                 alert(data.success);
-                                location.reload();
+                                // Cambiar el texto del botón según el estado de inscripción
+                                if (data.inscrito) {
+                                    document.getElementById('btnInscribir').textContent = 'Desinscribirme';
+                                } else {
+                                    document.getElementById('btnInscribir').textContent = 'Inscribirme';
+                                }
+                                location.reload(); // Recargar la página para reflejar los cambios
                             } else {
                                 alert(data.error);
                             }
                         })
                         .catch(error => console.error('Error:', error));
                 });
-
             });
+
         </script>
 
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>

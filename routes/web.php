@@ -37,7 +37,7 @@ Route::middleware(['auth', 'role:tienda'])->group(function () {
     Route::get('/tienda/stock', [TiendaController::class, 'TiendaTercera'])->name('tienda.ter');
     Route::get('/tienda/distribuidora', [TiendaController::class, 'TiendaCuarta'])->name('tienda.cua');
     Route::post('/tienda/torneos/events', [TiendaController::class, 'store'])->name('tienda.events.store');
-    Route::post('/tienda/torneos/eliminar', [TiendaController::class, 'eliminar'])->name('tienda.events.eliminar');
+    /*Route::delete('/tienda/torneos/{id}', [TiendaController::class, 'eliminar'])->name('tienda.events.eliminar');*/
 });
 
 Route::middleware(['auth', 'role:usuario'])->group(function () {
@@ -45,7 +45,7 @@ Route::middleware(['auth', 'role:usuario'])->group(function () {
     Route::get('/usuario/mazos', [UsuarioController::class, 'UsuarioSegunda'])->name('usuario.seg');
     Route::get('/usuario/tienda', [UsuarioController::class, 'UsuarioTercera'])->name('usuario.ter');
     Route::get('/usuario/carrito', [UsuarioController::class, 'UsuarioCuarta'])->name('usuario.cua');
-    Route::get('/usuario/decks',[UsuarioController::class, 'ObtenerDecks'])->name('usuario.decks');
+    Route::get('/usuario/decks', [UsuarioController::class, 'ObtenerDecks'])->name('usuario.decks');
     Route::post('/usuario/dashboard/inscribir', [UsuarioController::class, 'inscribirEvento'])->name('usuario.inscribir');
     Route::get('/usuario/decksOP', [UsuarioController::class, 'apiOnePiece'])->name('usuario.decksOP');
 });

@@ -8,7 +8,8 @@ use App\Models\Event;
 
 class UsuarioController extends Controller
 {
-    public function UsuarioDashboard(){
+    public function UsuarioDashboard()
+    {
         $all_events = Event::all();
 
         $events = [];
@@ -28,19 +29,23 @@ class UsuarioController extends Controller
         return view('usuario.usuario_dashboard', compact('events'));
     }
 
-    public function UsuarioSegunda(){
+    public function UsuarioSegunda()
+    {
         return view("usuario.usuario_mazos");
     }
 
-    public function UsuarioTercera(){
+    public function UsuarioTercera()
+    {
         return view("usuario.usuario_tienda");
     }
 
-    public function UsuarioCuarta(){
+    public function UsuarioCuarta()
+    {
         return view("usuario.usuario_carrito");
     }
 
-    public function obtenerDecks(){
+    public function obtenerDecks()
+    {
         return view("usuario.usuario_decks");
     }
 
@@ -65,37 +70,41 @@ class UsuarioController extends Controller
             return response()->json(['error' => 'Error al conectarse con la API'], 500);
         }
     }
+    
     public function inscribirEvento(Request $request)
     {
         try {
             $eventId = $request->input('event_id');
             $user = auth()->user(); // Obtiene el usuario autenticado
-    
+
             $event = Event::find($eventId);
-    
+
             if (!$event) {
                 return response()->json(['error' => 'Evento no encontrado.'], 404);
             }
-    
+
             $inscritos = $event->inscritos ? explode(',', $event->inscritos) : [];
-    
+
+            // Verificar si el usuario ya está inscrito
             if (in_array($user->username, $inscritos)) {
-                return response()->json(['error' => 'Ya estás inscrito en este evento.'], 400);
+                // Si el usuario está inscrito, lo desinscribimos
+                $inscritos = array_diff($inscritos, [$user->username]); // Elimina al usuario de la lista
+                $event->inscritos = $inscritos ? implode(',', $inscritos) : null;
+                $event->save();
+
+                return response()->json(['success' => 'Te has desinscrito correctamente.', 'inscrito' => false]);
+            } else {
+                // Si el usuario no está inscrito, lo inscribimos
+                $inscritos[] = $user->username;
+                $event->inscritos = implode(',', $inscritos);
+                $event->save();
+
+                return response()->json(['success' => 'Te has inscrito correctamente.', 'inscrito' => true]);
             }
-    
-            $inscritos[] = $user->username;
-            $event->inscritos = count($inscritos) ? implode(',', $inscritos) : null;
-            $event->save();
-    
-            return response()->json(['success' => 'Te has inscrito correctamente.']);
-            
+
         } catch (\Exception $e) {
             return response()->json(['error' => 'Error en el servidor: ' . $e->getMessage()], 500);
         }
     }
-    
-    
-    
-    
-    
+
 }

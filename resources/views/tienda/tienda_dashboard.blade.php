@@ -35,8 +35,8 @@
                         <p><strong>Participantes:</strong> <span id="eventInsc"></span>/<span id="eventPart"></span></p>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Eliminar Evento</button>
-                        <button type="button" class="btn btn-secondary" href="{{ route('tienda.events.eliminar') }}" data-bs-dismiss="modal">Cerrar</button>
+                        <!--<button type="button" id="deleteEventBtn" class="btn btn-danger" data-id="">Eliminar Evento</button>-->
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
                     </div>
                 </div>
             </div>
@@ -56,7 +56,7 @@
                     events: @json($events),
                     locale: 'es',
                     firstDay: 1,
-                    eventClick: function(info) {
+                    eventClick: function (info) {
                         // Mostrar los detalles del evento en el modal
                         var event = info.event;
                         document.getElementById('eventTitle').textContent = event.title;
