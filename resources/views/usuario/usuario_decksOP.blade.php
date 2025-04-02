@@ -18,7 +18,7 @@
                 <div class="col-4">
                     <h5>Cartas Seleccionadas:</h5>
                     <ul id="selectedCards" class="list-group"></ul>
-                    <button class="btn btn-success">Exportar deck</button>
+                    <button class="btn btn-info">Exportar deck</button>
                 </div>
                 <div class="col-8">
                     <div class="row">

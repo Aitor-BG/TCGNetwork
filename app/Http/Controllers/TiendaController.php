@@ -40,6 +40,10 @@ class TiendaController extends Controller
         return view("tienda.tienda_distribuidora");
     }
 
+    public function TiendaTorneo(){
+        return view("tienda.tienda_gesTorneo");
+    }
+
     public function store(Request $request)
     {
     

@@ -35,6 +35,7 @@
                         <p><strong>Participantes:</strong> <span id="eventInsc"></span>/<span id="eventPart"></span></p>
                     </div>
                     <div class="modal-footer">
+                        <a class="btn btn-success" href="/tienda/gesTorneo">Lanzar Evento</a>
                         <!--<button type="button" id="deleteEventBtn" class="btn btn-danger" data-id="">Eliminar Evento</button>-->
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
                     </div>
@@ -43,37 +44,43 @@
         </div>
 
         <script>
-            document.addEventListener('DOMContentLoaded', function () {
-                var calendarEl = document.getElementById('calendar');
+    document.addEventListener('DOMContentLoaded', function () {
+        var calendarEl = document.getElementById('calendar');
 
-                var calendar = new FullCalendar.Calendar(calendarEl, {
-                    initialView: 'dayGridMonth',
-                    headerToolbar: {
-                        left: 'prev',
-                        center: 'title',
-                        right: 'next'
-                    },
-                    events: @json($events),
-                    locale: 'es',
-                    firstDay: 1,
-                    eventClick: function (info) {
-                        // Mostrar los detalles del evento en el modal
-                        var event = info.event;
-                        document.getElementById('eventTitle').textContent = event.title;
-                        document.getElementById('eventDescription').textContent = event.extendedProps.details || 'Sin descripción';
-                        document.getElementById('eventDate').textContent = event.start.toLocaleString();
-                        document.getElementById('eventInsc').textContent = event.extendedProps.inscritos || 0;
-                        document.getElementById('eventPart').textContent = event.extendedProps.participantes || 'Determinado en tienda';
-                        
-                        // Mostrar el modal
-                        var myModal = new bootstrap.Modal(document.getElementById('eventModal'));
-                        myModal.show();
-                    }
-                });
+        var calendar = new FullCalendar.Calendar(calendarEl, {
+            initialView: 'dayGridMonth',
+            headerToolbar: {
+                left: 'prev',
+                center: 'title',
+                right: 'next'
+            },
+            events: @json($events),
+            locale: 'es',
+            firstDay: 1,
+            eventClick: function (info) {
+                var event = info.event;
+                document.getElementById('eventTitle').textContent = event.title;
+                document.getElementById('eventDescription').textContent = event.extendedProps.details || 'Sin descripción';
+                document.getElementById('eventDate').textContent = event.start.toLocaleString();
+                document.getElementById('eventInsc').textContent = event.extendedProps.inscritos || 0;
+                document.getElementById('eventPart').textContent = event.extendedProps.participantes || 'Determinado en tienda';
+                
+                var launchButton = document.querySelector('.btn-success');
+                if (event.extendedProps.inscritos > 0) {
+                    launchButton.style.display = 'inline-block';
+                } else {
+                    launchButton.style.display = 'none';
+                }
 
-                calendar.render();
-            });
-        </script>
+                var myModal = new bootstrap.Modal(document.getElementById('eventModal'));
+                myModal.show();
+            }
+        });
+
+        calendar.render();
+    });
+</script>
+
 
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     </body>

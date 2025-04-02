@@ -17,29 +17,29 @@
             <h2 class="mb-4">Crear Evento</h2>
             <form action="{{ route('tienda.events.store') }}" method="POST">
                 @csrf
-                <div class="mb-3">
+                <div class="form-group">
                     <label for="title" class="form-label">Título del Evento</label>
                     <input type="text" name="title" id="title" class="form-control"
                         placeholder="Ingrese el título del evento" required>
                 </div>
-                <div class="mb-3">
+                <div class="form-group">
                     <label for="start_date" class="form-label">Fecha de Inicio</label>
                     <input type="datetime-local" name="start_date" id="start_date" class="form-control" required>
                 </div>
-                <div class="mb-3">
+                <div class="form-group">
                     <label for="end_date" class="form-label">Fecha de Fin</label>
                     <input type="datetime-local" name="end_date" id="end_date" class="form-control" required>
                 </div>
-                <div class="mb-3">
+                <div class="form-group">
                     <label for="color" class="form-label">Color del Evento</label>
                     <input type="color" name="color" id="color" class="form-control" value="#000000">
                 </div>
-                <div class="mb-3">
+                <div class="form-group">
                     <label for="description" class="form-label">Descripción del evento</label>
                     <input type="textarea" name="description" id="description" class="form-control"
                         placeholder="Ingresa descripción del evento" required>
                 </div>
-                <div class="mb-3">
+                <div class="form-group">
                     <label for="participantes" class="form-label">Máximos participantes</label>
                     <input type="number" name="participantes" id="participantes" class="form-control"
                         placeholder="Ingresa máximo de participantes" required>
