@@ -20,6 +20,7 @@ return new class extends Migration
             $table->text('details')->nullable();
             $table->text('inscritos')->nullable();
             $table->integer('participantes')->nullable();
+            $table->boolean('en_curso')->default(false);
             $table->timestamps();
         });
     }

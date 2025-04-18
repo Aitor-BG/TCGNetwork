@@ -27,7 +27,7 @@
                                 <div class="container text-center">
                                     <img src="{{ $dato['images']['small'] }}" alt="{{ $dato['code'] }}"
                                         class="img-fluid rounded carta" data-bs-toggle="modal" data-bs-target="#imageModal"
-                                        data-bs-image="{{ $dato['images']['small'] }}">
+                                        data-bs-image="{{ $dato['images']['small'] }}" loading="lazy">
                                     <div class="mt-2">
                                         <button class="btn btn-sm btn-danger"
                                             onclick="updateCounter(this, -1, '{{ $dato['name'] . ' - ' . $dato['code'] }}', '{{ $dato['images']['small'] }}')"

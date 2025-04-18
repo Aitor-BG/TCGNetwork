@@ -23,6 +23,7 @@ class UsuarioController extends Controller
                 'details' => $event->details,
                 'inscritos' => $event->inscritos,
                 'participantes' => $event->participantes,
+                'en_curso' => $event->en_curso
             ];
         }
 
