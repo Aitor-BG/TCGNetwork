@@ -1,38 +1,60 @@
 <x-app-layout>
     <!DOCTYPE html>
     <html lang="es">
-
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Gestionar Torneo</title>
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
     </head>
-
     <body>
         <div class="container mt-4">
-            <!--<h3>{{ $event->name }}</h3>-->
-            <h4>Partidas:</h4>
-            <table class="table">
-                <thead class="text-center">
-                    <tr>
-                        <th>Jugador 1</th>
-                        <th colspan="2">Resultado</th>
-                        <th>Jugador 2</th>
-                    </tr>
-                </thead>
-                <tbody class="text-center">
-                    @foreach ($pares as $par)
+            <h3>{{ $event->name }}</h3>
+
+            <h4>Partidas - Ronda Actual</h4>
+
+            <!-- Formulario para guardar resultados y pasar a la siguiente ronda -->
+            <form method="POST" action="{{ route('torneo.siguienteRonda', $event->id) }}">
+                @csrf
+
+                <table class="table text-center">
+                    <thead>
                         <tr>
-                            <td>{{ $par[0] }}</td>
-                            <td>+</td>
-                            <td>+</td>
-                            <td>{{ $par[1] ?? '-Bye-' }}</td>
+                            <th>Jugador 1</th>
+                            <th colspan="2">Resultado</th>
+                            <th>Jugador 2</th>
                         </tr>
-                    @endforeach
-                </tbody>
-            </table>
-            <p><button class="btn btn-info">Siguiente Ronda</button><button class="btn btn-success">Terminar Evento</button></p>
+                    </thead>
+                    <tbody>
+                        @php
+                            $ronda = \App\Models\Partida::where('event_id', $event->id)->max('ronda');
+                            $partidas = \App\Models\Partida::where('event_id', $event->id)->where('ronda', $ronda)->get();
+                        @endphp
+                        @foreach ($partidas as $index => $partida)
+                            <tr>
+                                <td>{{ $partida->jugador1 }}</td>
+                                <td>
+                                    <input class="form-check-input" type="radio" name="ganador[{{ $partida->id }}]" value="{{ $partida->jugador1 }}" required>
+                                </td>
+                                <td>
+                                    @if ($partida->jugador2)
+                                        <input class="form-check-input" type="radio" name="ganador[{{ $partida->id }}]" value="{{ $partida->jugador2 }}">
+                                    @else
+                                        Bye
+                                    @endif
+                                </td>
+                                <td>{{ $partida->jugador2 ?? '-Bye-' }}</td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+
+                <p>
+                    <button type="submit" class="btn btn-info">Guardar Resultados y Generar Siguiente Ronda</button>
+                    <button type="button" class="btn btn-success">Terminar Evento</button>
+                </p>
+            </form>
+
             <h4>Clasificación:</h4>
             <table class="table">
                 <thead>
@@ -66,6 +88,5 @@
 
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     </body>
-
     </html>
 </x-app-layout>

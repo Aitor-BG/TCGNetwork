@@ -38,6 +38,8 @@ Route::middleware(['auth', 'role:tienda'])->group(function () {
     Route::get('/tienda/distribuidora', [TiendaController::class, 'TiendaCuarta'])->name('tienda.cua');
     Route::post('/tienda/torneos/events', [TiendaController::class, 'store'])->name('tienda.events.store');
     Route::get('/tienda/gesTorneo/{id}', [TiendaController::class, 'TiendaGestionarTorneo'])->name('tienda.gesTorneo');
+    /*Route::get('/tienda/gesTorneo/{id}/siguiente-ronda', [TiendaController::class, 'siguienteRonda'])->name('torneo.siguienteRonda');*/
+    Route::post('/tienda/gesTorneo/{id}/siguiente-ronda', [TiendaController::class, 'siguienteRonda'])->name('torneo.siguienteRonda');
     /*Route::delete('/tienda/torneos/{id}', [TiendaController::class, 'eliminar'])->name('tienda.events.eliminar');*/
 });
 
