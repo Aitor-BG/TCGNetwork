@@ -139,88 +139,99 @@ class TiendaController extends Controller
     }
 
     public function siguienteRonda(Request $request, $event_id)
-{
-    $event = Event::findOrFail($event_id);
+    {
+        $event = Event::findOrFail($event_id);
 
-    // 1. Procesar resultados de la última ronda antes de generar la nueva
-    $ganadores = $request->input('ganador', []);
-    $ronda_actual = Partida::where('event_id', $event_id)->max('ronda');
+        // 1. Procesar resultados de la última ronda antes de generar la nueva
+        $ganadores = $request->input('ganador', []);
+        $ronda_actual = Partida::where('event_id', $event_id)->max('ronda');
 
-    foreach ($ganadores as $partida_id => $ganador) {
-        $partida = Partida::find($partida_id);
-        if (!$partida) continue;
+        foreach ($ganadores as $partida_id => $ganador) {
+            $partida = Partida::find($partida_id);
+            if (!$partida)
+                continue;
 
-        $jugador1 = Torneo::where('event_id', $event_id)->where('competidor', $partida->jugador1)->first();
-        $jugador2 = $partida->jugador2 ? Torneo::where('event_id', $event_id)->where('competidor', $partida->jugador2)->first() : null;
+            $jugador1 = Torneo::where('event_id', $event_id)->where('competidor', $partida->jugador1)->first();
+            $jugador2 = $partida->jugador2 ? Torneo::where('event_id', $event_id)->where('competidor', $partida->jugador2)->first() : null;
 
-        if ($ganador === $partida->jugador1) {
-            $jugador1->puntos += 3;
-            $jugador1->victorias += 1;
-            $jugador1->save();
+            if ($ganador === $partida->jugador1) {
+                $jugador1->puntos += 3;
+                $jugador1->victorias += 1;
+                $jugador1->save();
 
-            if ($jugador2) {
-                $jugador2->derrotas += 1;
+                if ($jugador2) {
+                    $jugador2->derrotas += 1;
+                    $jugador2->save();
+                }
+
+            } elseif ($jugador2 && $ganador === $partida->jugador2) {
+                $jugador2->puntos += 3;
+                $jugador2->victorias += 1;
                 $jugador2->save();
-            }
 
-        } elseif ($jugador2 && $ganador === $partida->jugador2) {
-            $jugador2->puntos += 3;
-            $jugador2->victorias += 1;
-            $jugador2->save();
-
-            $jugador1->derrotas += 1;
-            $jugador1->save();
-        }
-    }
-
-    // 2. Generar la siguiente ronda (emparejamientos estilo Swiss)
-    $jugadores = Torneo::where('event_id', $event_id)
-        ->orderByDesc('puntos')
-        ->get();
-
-    $matches = Partida::where('event_id', $event_id)->get();
-    $emparejamientos = [];
-
-    while ($jugadores->count() > 1) {
-        $jugador1 = $jugadores->shift();
-
-        foreach ($jugadores as $key => $jugador2) {
-            $ya_jugaron = $matches->contains(function ($match) use ($jugador1, $jugador2) {
-                return
-                    ($match->jugador1 === $jugador1->competidor && $match->jugador2 === $jugador2->competidor) ||
-                    ($match->jugador1 === $jugador2->competidor && $match->jugador2 === $jugador1->competidor);
-            });
-
-            if (!$ya_jugaron) {
-                $emparejamientos[] = [$jugador1->competidor, $jugador2->competidor];
-                $jugadores->forget($key);
-                break;
+                $jugador1->derrotas += 1;
+                $jugador1->save();
             }
         }
-    }
 
-    if ($jugadores->count() === 1) {
-        $byePlayer = $jugadores->first();
-        $emparejamientos[] = [$byePlayer->competidor, null];
+        // 2. Generar la siguiente ronda (emparejamientos estilo Swiss)
+        $jugadores = Torneo::where('event_id', $event_id)
+            ->orderByDesc('puntos')
+            ->get();
 
-        if ($byePlayer->bye == 0) {
-            $byePlayer->puntos += 3;
-            $byePlayer->bye = 1;
-            $byePlayer->save();
+        $matches = Partida::where('event_id', $event_id)->get();
+        $emparejamientos = [];
+
+        while ($jugadores->count() > 1) {
+            $jugador1 = $jugadores->shift();
+
+            foreach ($jugadores as $key => $jugador2) {
+                $ya_jugaron = $matches->contains(function ($match) use ($jugador1, $jugador2) {
+                    return
+                        ($match->jugador1 === $jugador1->competidor && $match->jugador2 === $jugador2->competidor) ||
+                        ($match->jugador1 === $jugador2->competidor && $match->jugador2 === $jugador1->competidor);
+                });
+
+                if (!$ya_jugaron) {
+                    $emparejamientos[] = [$jugador1->competidor, $jugador2->competidor];
+                    $jugadores->forget($key);
+                    break;
+                }
+            }
         }
+
+        if ($jugadores->count() === 1) {
+            $byePlayer = $jugadores->first();
+            $emparejamientos[] = [$byePlayer->competidor, null];
+
+            if ($byePlayer->bye == 0) {
+                $byePlayer->puntos += 3;
+                $byePlayer->bye = 1;
+                $byePlayer->save();
+            }
+        }
+
+        $nueva_ronda = $ronda_actual + 1;
+
+        foreach ($emparejamientos as $par) {
+            Partida::create([
+                'event_id' => $event_id,
+                'jugador1' => $par[0],
+                'jugador2' => $par[1],
+                'ronda' => $nueva_ronda
+            ]);
+        }
+
+        return redirect()->back()->with('success', 'Resultados guardados y nueva ronda generada');
+    }
+    public function mostrarClasificacionFinal($id)
+    {
+        $event = Event::findOrFail($id);
+        $clasificacion = Torneo::where('event_id', $id)
+            ->orderByDesc('puntos')
+            ->get();
+
+        return view('tienda.tienda_clasificacion_final', compact('event', 'clasificacion'));
     }
 
-    $nueva_ronda = $ronda_actual + 1;
-
-    foreach ($emparejamientos as $par) {
-        Partida::create([
-            'event_id' => $event_id,
-            'jugador1' => $par[0],
-            'jugador2' => $par[1],
-            'ronda' => $nueva_ronda
-        ]);
-    }
-
-    return redirect()->back()->with('success', 'Resultados guardados y nueva ronda generada');
-}
 }

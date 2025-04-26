@@ -13,7 +13,6 @@
 
             <h4>Partidas - Ronda Actual</h4>
 
-            <!-- Formulario para guardar resultados y pasar a la siguiente ronda -->
             <form method="POST" action="{{ route('torneo.siguienteRonda', $event->id) }}">
                 @csrf
 
@@ -50,8 +49,8 @@
                 </table>
 
                 <p>
-                    <button type="submit" class="btn btn-info">Guardar Resultados y Generar Siguiente Ronda</button>
-                    <button type="button" class="btn btn-success">Terminar Evento</button>
+                    <button type="submit" class="btn btn-info">Generar Siguiente Ronda</button>
+                    <a href="{{ route('torneo.finalizado', $event->id) }}" class="btn btn-success">Terminar Evento</a>
                 </p>
             </form>
 
