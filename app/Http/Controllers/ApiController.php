@@ -10,7 +10,7 @@ class ApiController extends Controller
     {
         // Parámetros de paginación
         $page = $request->input('page', 1); // Por defecto, comenzamos en la página 1
-        $limit = 30; // Mostramos 30 cartas por página (6 filas x 5 columnas)
+        $limit = 15; // Mostramos 30 cartas por página (6 filas x 5 columnas)
 
         // La URL de la API con los parámetros de paginación
         $url = 'https://apitcg.com/api/one-piece/cards?limit=' . $limit . '&page=' . $page;
@@ -31,9 +31,9 @@ class ApiController extends Controller
     public function datosPok(Request $request)
     {
         $page = $request->input('page', 1);
-        $limit = 30;
+        $limit = 15;
 
-        $url = 'https://apitcg.com/api/pokemon/cards?limit=' . $limit . '&page=' . $page;
+        $url = 'https://apitcg.com/api/dragon_ball/cards?limit=' . $limit . '&page=' . $page;
 
         $respuesta = Http::withHeaders([
             'x-api-key' => env('API_KEY'),

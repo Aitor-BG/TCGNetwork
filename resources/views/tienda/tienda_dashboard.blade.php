@@ -38,7 +38,7 @@
                         <a id="launchEventBtn" class="btn btn-success" href="#">Lanzar Evento</a>
                         <button type="button" id="deleteEventBtn" class="btn btn-danger" (click)="event.remov"
                             data-id="">Eliminar Evento</button>
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                        <button type="button" class="btn btn-warning" data-bs-dismiss="modal">Editar</button>
                     </div>
                 </div>
             </div>

@@ -20,7 +20,7 @@
                         <img src="{{ asset('images/logo_op.png') }}" class="card-img-top" alt="...">
                         <div class="card-body">
                             <h5 class="card-title">One Piece TCG</h5>
-                            <a href="/usuario/decksOP" class="btn btn-primary">Ver Mazos</a>
+                            <a href="/usuario/decksOP" class="btn btn-primary">Crear Mazo</a>
                         </div>
                     </div>
                 </div>
@@ -29,7 +29,7 @@
                         <img src="{{ asset('images/logo_db.png') }}" class="card-img-top" alt="...">
                         <div class="card-body">
                             <h5 class="card-title">Dragon Ball: Fusion World</h5>
-                            <a href="/usuario/decks" class="btn btn-primary">Ver Mazos</a>
+                            <a href="/usuario/decks" class="btn btn-primary">Crear Mazo</a>
                         </div>
                     </div>
                 </div>
@@ -40,7 +40,7 @@
                         <img src="{{ asset('images/logo_dg.png') }}" class="card-img-top" alt="...">
                         <div class="card-body">
                             <h5 class="card-title">Digimon</h5>
-                            <a href="/usuario/decks" class="btn btn-primary">Ver Mazos</a>
+                            <a href="/usuario/decks" class="btn btn-primary">Crear Mazo</a>
                         </div>
                     </div>
                 </div>
@@ -49,7 +49,7 @@
                         <img src="{{ asset('images/logo_pk.png') }}" class="card-img-top" alt="...">
                         <div class="card-body">
                             <h5 class="card-title">Magic</h5>
-                            <a href="/usuario/decks" class="btn btn-primary">Ver Mazos</a>
+                            <a href="/usuario/decks" class="btn btn-primary">Crear Mazo</a>
                         </div>
                     </div>
                 </div>
