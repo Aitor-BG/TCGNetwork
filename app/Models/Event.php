@@ -11,11 +11,15 @@ class Event extends Model
 {
     use HasFactory, LogsActivity;
 
-    protected $fillable = ['name','start_date','end_date','color','details','inscritos','participantes'];
+    /*protected $fillable = ['name','start_date','end_date','color','details','inscritos','participantes'];*/
+    protected $fillable = ['name','date','color','details','inscritos','participantes'];
 
     public function getActivitylogOptions(): LogOptions
     {
+        /*return LogOptions::defaults()
+        ->logOnly(['name','start_date','end_date','inscritos']);*/
+
         return LogOptions::defaults()
-        ->logOnly(['name','start_date','end_date','inscritos']);
+        ->logOnly(['name','date','inscritos']);
     }
 }

@@ -44,6 +44,53 @@
             </div>
         </div>
 
+        <div class="modal fade" id="createEventModal" tabindex="-1" aria-labelledby="createEventModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog">
+                <form method="POST" action="{{ route('tienda.events.store') }}">
+                    @csrf
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Crear Nuevo Evento</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                aria-label="Cerrar"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="mb-3">
+                                <label for="title" class="form-label">Título del Evento</label>
+                                <input type="text" name="title" id="title" class="form-control"
+                                    placeholder="Ingrese el título del evento" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="color" class="form-label">Color del Evento</label>
+                                <input type="color" name="color" id="color" class="form-control" value="#000000">
+                            </div>
+                            <div class="mb-3">
+                                <label for="description" class="form-label">Descripción del evento</label>
+                                <input type="textarea" name="description" id="description" class="form-control"
+                                    placeholder="Ingresa descripción del evento" required>
+                            </div>
+                            <div class="mb-3">
+                            <label for="participantes" class="form-label">Máximos participantes</label>
+                    <input type="number" name="participantes" id="participantes" class="form-control"
+                        placeholder="Ingresa máximo de participantes" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="date" class="form-label">Fecha</label>
+                                <input type="date" class="form-control" name="date" id="date" readonly>
+                            </div>
+
+                        </div>
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-primary">Crear Evento</button>
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+
         <script>
             document.addEventListener('DOMContentLoaded', function () {
                 var calendarEl = document.getElementById('calendar');
@@ -62,7 +109,7 @@
                         var event = info.event;
                         document.getElementById('eventTitle').textContent = event.title;
                         document.getElementById('eventDescription').textContent = event.extendedProps.details || 'Sin descripción';
-                        document.getElementById('eventDate').textContent = event.start.toLocaleString();
+                        document.getElementById('eventDate').textContent = event.start.toLocaleDateString('es-ES');
                         document.getElementById('eventInsc').textContent = event.extendedProps.inscritos || 0;
                         document.getElementById('eventPart').textContent = event.extendedProps.participantes || 'Determinado en tienda';
 
@@ -79,7 +126,14 @@
 
                         var myModal = new bootstrap.Modal(document.getElementById('eventModal'));
                         myModal.show();
-                    }
+                    },
+                    dateClick: function (info) {
+                        document.getElementById('date').value = info.dateStr;
+
+                        var createModal = new bootstrap.Modal(document.getElementById('createEventModal'));
+                        createModal.show();
+                    },
+
                 });
 
                 calendar.render();

@@ -17,11 +17,20 @@ class TiendaController extends Controller
 
         foreach ($all_events as $event) {
             $inscritos = $event->inscritos ? explode(',', $event->inscritos) : [];
-            $events[] = [
+            /*$events[] = [
                 'id' => $event->id,
                 'title' => $event->name,
                 'start' => $event->start_date,
                 'end' => $event->end_date,
+                'color' => $event->color,
+                'details' => $event->details,
+                'inscritos' => count($inscritos),
+                'participantes' => $event->participantes,
+            ];*/
+            $events[] = [
+                'id' => $event->id,
+                'title' => $event->name,
+                'date' => $event->date,
                 'color' => $event->color,
                 'details' => $event->details,
                 'inscritos' => count($inscritos),
@@ -52,7 +61,7 @@ class TiendaController extends Controller
         return view("tienda.tienda_gesTorneo");
     }
 
-    public function store(Request $request)
+    /*public function store(Request $request)
     {
 
         // Validación de los datos del formulario
@@ -77,6 +86,45 @@ class TiendaController extends Controller
         $event->save();
 
         // Redirigir al dashboard de la tienda
+        return redirect()->route('tienda.dashboard');
+    }*/
+
+    public function store(Request $request)
+    {
+        /*$validated = $request->validate([
+            'title' => 'required|string|max:255',
+            'start_date' => 'required|date',
+            'end_date' => 'required|date|after_or_equal:start_date',
+            'color' => 'required|string',
+            'description' => 'required|string',
+            'participantes' => 'required|integer'
+        ]);
+
+        $event = new Event();
+        $event->name = $validated['title'];
+        $event->start_date = $validated['start_date'];
+        $event->end_date = $validated['end_date'];
+        $event->color = $validated['color'];
+        $event->details = $validated['description'];
+        $event->participantes = $validated['participantes'];*/
+
+        $validated = $request->validate([
+            'title' => 'required|string|max:255',
+            'date' => 'required|date',
+            'color' => 'required|string',
+            'description' => 'required|string',
+            'participantes' => 'required|integer'
+        ]);
+
+        $event = new Event();
+        $event->name = $validated['title'];
+        $event->date = $validated['date'];
+        $event->color = $validated['color'];
+        $event->details = $validated['description'];
+        $event->participantes = $validated['participantes'];
+
+        $event->save();
+
         return redirect()->route('tienda.dashboard');
     }
 
