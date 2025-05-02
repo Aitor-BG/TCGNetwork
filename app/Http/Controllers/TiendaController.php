@@ -35,6 +35,7 @@ class TiendaController extends Controller
                 'details' => $event->details,
                 'inscritos' => count($inscritos),
                 'participantes' => $event->participantes,
+                /*'estado' => $event->estado*/
             ];
         }
 
@@ -43,15 +44,10 @@ class TiendaController extends Controller
 
     public function TiendaSegunda()
     {
-        return view("tienda.tienda_torneos");
-    }
-
-    public function TiendaTercera()
-    {
         return view("tienda.tienda_stock");
     }
 
-    public function TiendaCuarta()
+    public function TiendaTercera()
     {
         return view("tienda.tienda_distribuidora");
     }

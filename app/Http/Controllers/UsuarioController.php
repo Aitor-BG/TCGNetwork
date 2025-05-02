@@ -17,13 +17,11 @@ class UsuarioController extends Controller
             $events[] = [
                 'id' => $event->id,
                 'title' => $event->name,
-                'start' => $event->start_date,
-                'end' => $event->end_date,
+                'date' => $event->date,
                 'color' => $event->color,
                 'details' => $event->details,
                 'inscritos' => $event->inscritos,
                 'participantes' => $event->participantes,
-                'en_curso' => $event->en_curso
             ];
         }
 

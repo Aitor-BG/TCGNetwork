@@ -3,6 +3,7 @@
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\TiendaController;
 use App\Http\Controllers\UsuarioController;
+use App\Http\Controllers\AdminController;
 use App\Http\Controllers\EventController;
 use Illuminate\Support\Facades\Route;
 
@@ -33,9 +34,8 @@ Route::middleware('auth')->group(function () {
 
 Route::middleware(['auth', 'role:tienda'])->group(function () {
     Route::get('/tienda/dashboard', [TiendaController::class, 'TiendaDashboard'])->name('tienda.dashboard');
-    Route::get('/tienda/torneos', [TiendaController::class, 'TiendaSegunda'])->name('tienda.seg');
-    Route::get('/tienda/stock', [TiendaController::class, 'TiendaTercera'])->name('tienda.ter');
-    Route::get('/tienda/distribuidora', [TiendaController::class, 'TiendaCuarta'])->name('tienda.cua');
+    Route::get('/tienda/stock', [TiendaController::class, 'TiendaSegunda'])->name('tienda.seg');
+    Route::get('/tienda/distribuidora', [TiendaController::class, 'TiendaTercera'])->name('tienda.ter');
     Route::post('/tienda/torneos/events', [TiendaController::class, 'store'])->name('tienda.events.store');
     Route::get('/tienda/gesTorneo/{id}', [TiendaController::class, 'TiendaGestionarTorneo'])->name('tienda.gesTorneo');
     /*Route::get('/tienda/gesTorneo/{id}/siguiente-ronda', [TiendaController::class, 'siguienteRonda'])->name('torneo.siguienteRonda');*/
@@ -48,10 +48,15 @@ Route::middleware(['auth', 'role:usuario'])->group(function () {
     Route::get('/usuario/dashboard', [UsuarioController::class, 'UsuarioDashboard'])->name('usuario.dashboard');
     Route::get('/usuario/mazos', [UsuarioController::class, 'UsuarioSegunda'])->name('usuario.seg');
     Route::get('/usuario/tienda', [UsuarioController::class, 'UsuarioTercera'])->name('usuario.ter');
-    Route::get('/usuario/carrito', [UsuarioController::class, 'UsuarioCuarta'])->name('usuario.cua');
     Route::get('/usuario/decks', [UsuarioController::class, 'ObtenerDecks'])->name('usuario.decks');
     Route::post('/usuario/dashboard/inscribir', [UsuarioController::class, 'inscribirEvento'])->name('usuario.inscribir');
     Route::get('/usuario/decksOP', [UsuarioController::class, 'apiOnePiece'])->name('usuario.decksOP');
+});
+
+Route::middleware(['auth', 'role:admin'])->group(function () {
+    Route::get('/admin/dashboard', [AdminController::class, 'AdminDashboard'])->name('admin.dashboard');
+    Route::get('/admin/notificaciones', [AdminController::class, 'AdminSegunda'])->name('admin.seg');
+    Route::get('/admin/logs', [AdminController::class, 'AdminTercera'])->name('admin.ter');
 });
 
 

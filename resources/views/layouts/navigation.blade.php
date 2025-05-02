@@ -9,7 +9,6 @@
                     $route = $role . '.dashboard';
                     $route2 = $role . '.seg';
                     $route3 = $role . '.ter';
-                    $route4 = $role . '.cua';
                 @endphp
                 <div class="shrink-0 flex items-center">
                     <a href="{{ route($route) }}">
@@ -25,21 +24,51 @@
                         {{ __('Inicio') }}
                     </x-nav-link>
                 </div>
-                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                <!--<div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                     <x-nav-link :href="route($route2)" :active="request()->routeIs('$route2')">
-                    {{ $role === 'tienda' ? __('Torneos') : __('Mazos') }}
+                    {{ $role === 'tienda' ? __('Stock') : __('Mazos') }}
                     </x-nav-link>
                 </div>
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                     <x-nav-link :href="route($route3)" :active="request()->routeIs('$route3')">
-                    {{ $role === 'tienda' ? __('Stock') : __('Tienda') }}
+                    {{ $role === 'tienda' ? __('Distribuidora') : __('Tienda') }}
+                    </x-nav-link>
+                </div>-->
+                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                    <x-nav-link :href="route($route2)" :active="request()->routeIs('$route2')">
+                        @switch($role)
+                            @case('tienda')
+                                {{ __('Stock') }}
+                                @break
+                            @case('usuario')
+                                {{ __('Mazos') }}
+                                @break
+                            @case('admin')
+                                {{ __('Notificaciones') }}
+                                @break
+                            @default
+                                {{ __('Inicio') }}
+                        @endswitch
                     </x-nav-link>
                 </div>
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                    <x-nav-link :href="route($route4)" :active="request()->routeIs('$route4')">
-                    {{ $role === 'tienda' ? __('Distribuidora') : __('Carrito') }}
+                    <x-nav-link :href="route($route3)" :active="request()->routeIs('$route3')">
+                        @switch($role)
+                            @case('tienda')
+                                {{ __('Distribuidora') }}
+                                @break
+                            @case('usuario')
+                                {{ __('Tienda') }}
+                                @break
+                            @case('admin')
+                                {{ __('Logs') }}
+                                @break
+                            @default
+                                {{ __('Inicio') }}
+                        @endswitch
                     </x-nav-link>
                 </div>
+
             </div>
 
             <!-- Settings Dropdown -->

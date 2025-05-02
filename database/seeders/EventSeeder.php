@@ -15,19 +15,28 @@ class EventSeeder extends Seeder
     {
         $events = [
             [
-                "name" => "One Piece 09 Local",
-                "start_date" => "2025-03-08 17:00",
-                "end_date" => "2025-03-08 20:30",
+                "name" => "One Piece 10 Local",
+                "date" => "2025-05-06",
+                "color" => "rgb(255,0,0)",
+                "details" => "Torneo en formato OP10. Aplican bans oficiales de Bandai.",
+                "inscritos" => "",
+                "participantes" => 16 
             ],
             [
                 "name" => "Lorcana Local",
-                "start_date" => "2025-03-09 17:00",
-                "end_date" => "2025-03-09 20:30",
+                "date" => "2025-05-05",
+                "color" => "rgb(255,0,255)",
+                "details" => "Torneo en formato Archazia's Island. Aplican bans oficiales de Ravensburg.",
+                "inscritos" => "",
+                "participantes" => 16 
             ],
             [
-                "name" => "Commander Budget",
-                "start_date" => "2025-03-10 17:00",
-                "end_date" => "2025-03-10 20:30",
+                "name" => "Magic Commander",
+                "date" => "2025-05-07",
+                "color" => "rgb(204, 171, 99)",
+                "details" => "Torneo con mazos budget (100€ máx). Para conocer el precio de tu mazo introducirlo en la app Manabox y regirse por el mínimo. Pasar el precio por artes alternativos no importa.",
+                "inscritos" => "",
+                "participantes" => 16 
             ],
         ];
 

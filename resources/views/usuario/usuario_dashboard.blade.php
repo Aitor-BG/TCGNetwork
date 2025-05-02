@@ -118,7 +118,7 @@
                         var event = info.event;
                         document.getElementById('eventTitle').textContent = event.title;
                         document.getElementById('eventDescription').textContent = event.extendedProps.details || 'Sin descripción';
-                        document.getElementById('eventDate').textContent = event.start.toLocaleString();
+                        document.getElementById('eventDate').textContent = event.start.toLocaleString('es-ES');
 
                         let inscritos = event.extendedProps.inscritos ? event.extendedProps.inscritos.split(',') : [];
                         document.getElementById('eventInsc').textContent = inscritos.length;
@@ -126,17 +126,28 @@
 
                         document.getElementById('btnInscribir').setAttribute('data-event-id', event.id);
 
-                        // Verificar si el usuario ya está inscrito
-                        let username = '{{ auth()->user()->username }}'; // Obtén el username del usuario autenticado
-                        if (inscritos.includes(username)) {
-                            document.getElementById('btnInscribir').textContent = 'Desinscribirme';
-                            document.getElementById('btnInscribir').classList.remove('btn-success');
-                            document.getElementById('btnInscribir').classList.add('btn-danger');
+                        let username = '{{ auth()->user()->username }}';
+                        let btn = document.getElementById('btnInscribir');
+
+                        if (inscritos.length === event.extendedProps.participantes && !inscritos.includes(username)) {
+                            // Si el evento está lleno y el usuario no está inscrito, ocultar botón
+                            btn.style.display = 'none';
+                            btn.href = '#';
                         } else {
-                            document.getElementById('btnInscribir').textContent = 'Inscribirme';
-                            document.getElementById('btnInscribir').classList.remove('btn-danger');
-                            document.getElementById('btnInscribir').classList.add('btn-success');
+                            // Mostrar y ajustar el botón según si el usuario está inscrito o no
+                            btn.style.display = ''; // Mostrar el botón por si estaba oculto
+
+                            if (inscritos.includes(username)) {
+                                btn.textContent = 'Desinscribirme';
+                                btn.classList.remove('btn-success');
+                                btn.classList.add('btn-danger');
+                            } else {
+                                btn.textContent = 'Inscribirme';
+                                btn.classList.remove('btn-danger');
+                                btn.classList.add('btn-success');
+                            }
                         }
+
 
                         var myModal = new bootstrap.Modal(document.getElementById('eventModal'));
                         myModal.show();

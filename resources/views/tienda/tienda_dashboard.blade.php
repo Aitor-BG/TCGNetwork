@@ -114,7 +114,7 @@
                         document.getElementById('eventPart').textContent = event.extendedProps.participantes || 'Determinado en tienda';
 
                         var launchButton = document.getElementById('launchEventBtn');
-                        if (event.extendedProps.inscritos > 0) {
+                        if (event.extendedProps.inscritos > 4) {
                             launchButton.style.display = 'inline-block';
                             launchButton.href = '/tienda/gesTorneo/' + event.id;
                         } else {
