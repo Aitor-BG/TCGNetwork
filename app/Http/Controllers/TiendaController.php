@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use Illuminate\Http\Request;
 use App\Models\Event;
 use App\Models\Torneo;
@@ -17,26 +18,17 @@ class TiendaController extends Controller
 
         foreach ($all_events as $event) {
             $inscritos = $event->inscritos ? explode(',', $event->inscritos) : [];
-            /*$events[] = [
-                'id' => $event->id,
-                'title' => $event->name,
-                'start' => $event->start_date,
-                'end' => $event->end_date,
-                'color' => $event->color,
-                'details' => $event->details,
-                'inscritos' => count($inscritos),
-                'participantes' => $event->participantes,
-            ];*/
-            $events[] = [
-                'id' => $event->id,
-                'title' => $event->name,
-                'date' => $event->date,
-                'color' => $event->color,
-                'details' => $event->details,
-                'inscritos' => count($inscritos),
-                'participantes' => $event->participantes,
-                /*'estado' => $event->estado*/
-            ];
+            if ($event->estado == 'verificado' && $event->user_id === auth()->id()) {
+                $events[] = [
+                    'id' => $event->id,
+                    'title' => $event->name,
+                    'date' => $event->date,
+                    'color' => $event->color,
+                    'details' => $event->details,
+                    'inscritos' => count($inscritos),
+                    'participantes' => $event->participantes,
+                ];
+            }
         }
 
         return view('tienda.tienda_dashboard', compact('events'));
@@ -57,53 +49,8 @@ class TiendaController extends Controller
         return view("tienda.tienda_gesTorneo");
     }
 
-    /*public function store(Request $request)
-    {
-
-        // Validación de los datos del formulario
-        $validated = $request->validate([
-            'title' => 'required|string|max:255',
-            'start_date' => 'required|date',
-            'end_date' => 'required|date|after_or_equal:start_date',
-            'color' => 'required|string',
-            'description' => 'required|string',
-            'participantes' => 'required|integer'
-        ]);
-
-        $event = new Event();
-        $event->name = $validated['title'];
-        $event->start_date = $validated['start_date'];
-        $event->end_date = $validated['end_date'];
-        $event->color = $validated['color'];
-        $event->details = $validated['description'];
-        $event->participantes = $validated['participantes'];
-
-        // Guardar el evento en la base de datos
-        $event->save();
-
-        // Redirigir al dashboard de la tienda
-        return redirect()->route('tienda.dashboard');
-    }*/
-
     public function store(Request $request)
     {
-        /*$validated = $request->validate([
-            'title' => 'required|string|max:255',
-            'start_date' => 'required|date',
-            'end_date' => 'required|date|after_or_equal:start_date',
-            'color' => 'required|string',
-            'description' => 'required|string',
-            'participantes' => 'required|integer'
-        ]);
-
-        $event = new Event();
-        $event->name = $validated['title'];
-        $event->start_date = $validated['start_date'];
-        $event->end_date = $validated['end_date'];
-        $event->color = $validated['color'];
-        $event->details = $validated['description'];
-        $event->participantes = $validated['participantes'];*/
-
         $validated = $request->validate([
             'title' => 'required|string|max:255',
             'date' => 'required|date',
@@ -118,27 +65,20 @@ class TiendaController extends Controller
         $event->color = $validated['color'];
         $event->details = $validated['description'];
         $event->participantes = $validated['participantes'];
+        $event->user_id = auth()->id();
 
         $event->save();
 
         return redirect()->route('tienda.dashboard');
     }
 
-    /*public function eliminar($id)
+    public function eliminarEvento($id)
     {
-        // Encontrar el evento por su ID
-        $evento = Event::find($id);
-    
-        if (!$evento) {
-            return response()->json(['success' => false, 'message' => 'Evento no encontrado'], 404);
-        }
-    
-        // Eliminar el evento
-        $evento->delete();
-    
-        // Retornar una respuesta exitosa
-        return response()->json(['success' => true, 'message' => 'Evento eliminado']);
-    }*/
+        $evento = Event::findOrFail($id);
+        $evento->estado = 'revision';
+        $evento->save();
+        return redirect()->back()->with('success', 'Evento eliminado correctamente.');
+    }
 
     public function TiendaGestionarTorneo($id)
     {

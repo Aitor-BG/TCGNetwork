@@ -14,11 +14,38 @@
     <body>
         <div class="container mt-4">
             <div class="row">
+                <!-- Calendario -->
                 <div class="col-md-6">
                     <div id="calendar"></div>
                 </div>
+
+                <!-- Tabla de eventos -->
+                <div class="col-md-6">
+                    <h4>Eventos próximos</h4>
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Fecha</th>
+                                <th>Evento</th>
+                                <th>Inscritos</th>
+                                <th>Máx. Part.</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (collect($events)->sortBy('date') as $event)
+                                <tr>
+                                    <td>{{ \Carbon\Carbon::parse($event['date'])->format('d/m/Y') }}</td>
+                                    <td>{{ $event['title'] }}</td>
+                                    <td>{{ $event['inscritos'] ?? 0 }}</td>
+                                    <td>{{ $event['participantes'] ?? 'N/A' }}</td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
+
 
         <!-- Modal -->
         <div class="modal fade" id="eventModal" tabindex="-1" aria-labelledby="eventModalLabel" aria-hidden="true">
@@ -36,9 +63,14 @@
                     </div>
                     <div class="modal-footer">
                         <a id="launchEventBtn" class="btn btn-success" href="#">Lanzar Evento</a>
-                        <button type="button" id="deleteEventBtn" class="btn btn-danger" (click)="event.remov"
-                            data-id="">Eliminar Evento</button>
                         <button type="button" class="btn btn-warning" data-bs-dismiss="modal">Editar</button>
+                        <input type="hidden" id="deleteEventId" name="event_id" />
+                        <form id="deleteForm" method="POST">
+                            @csrf
+                            <button type="submit" class="btn btn-danger">Eliminar Evento</button>
+                        </form>
+
+
                     </div>
                 </div>
             </div>
@@ -71,9 +103,9 @@
                                     placeholder="Ingresa descripción del evento" required>
                             </div>
                             <div class="mb-3">
-                            <label for="participantes" class="form-label">Máximos participantes</label>
-                    <input type="number" name="participantes" id="participantes" class="form-control"
-                        placeholder="Ingresa máximo de participantes" required>
+                                <label for="participantes" class="form-label">Máximos participantes</label>
+                                <input type="number" name="participantes" id="participantes" class="form-control"
+                                    placeholder="Ingresa máximo de participantes" required>
                             </div>
                             <div class="mb-3">
                                 <label for="date" class="form-label">Fecha</label>
@@ -114,7 +146,7 @@
                         document.getElementById('eventPart').textContent = event.extendedProps.participantes || 'Determinado en tienda';
 
                         var launchButton = document.getElementById('launchEventBtn');
-                        if (event.extendedProps.inscritos > 4) {
+                        if (event.extendedProps.inscritos >= 4) {
                             launchButton.style.display = 'inline-block';
                             launchButton.href = '/tienda/gesTorneo/' + event.id;
                         } else {
@@ -123,6 +155,7 @@
                             console.warn('ID del evento no definido');
                         }
 
+                        document.getElementById('deleteForm').action = '/tienda/eventos/' + event.id + '/eliminar';
 
                         var myModal = new bootstrap.Modal(document.getElementById('eventModal'));
                         myModal.show();
@@ -138,6 +171,7 @@
 
                 calendar.render();
             });
+
 
         </script>
 

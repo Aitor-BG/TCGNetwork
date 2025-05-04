@@ -41,7 +41,7 @@ Route::middleware(['auth', 'role:tienda'])->group(function () {
     /*Route::get('/tienda/gesTorneo/{id}/siguiente-ronda', [TiendaController::class, 'siguienteRonda'])->name('torneo.siguienteRonda');*/
     Route::post('/tienda/gesTorneo/{id}/siguiente-ronda', [TiendaController::class, 'siguienteRonda'])->name('torneo.siguienteRonda');
     Route::get('/tienda/gesTorneo/{id}/finalizado', [TiendaController::class, 'mostrarClasificacionFinal'])->name('torneo.finalizado');
-    /*Route::delete('/tienda/torneos/{id}', [TiendaController::class, 'eliminar'])->name('tienda.events.eliminar');*/
+    Route::post('/tienda/eventos/{id}/eliminar', [TiendaController::class, 'eliminarEvento'])->name('tienda.eventos.eliminar');
 });
 
 Route::middleware(['auth', 'role:usuario'])->group(function () {
@@ -57,6 +57,8 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/admin/dashboard', [AdminController::class, 'AdminDashboard'])->name('admin.dashboard');
     Route::get('/admin/notificaciones', [AdminController::class, 'AdminSegunda'])->name('admin.seg');
     Route::get('/admin/logs', [AdminController::class, 'AdminTercera'])->name('admin.ter');
+    Route::post('/admin/eventos/{id}/verificar', [AdminController::class, 'verificarEvento'])->name('admin.eventos.verificar');
+
 });
 
 

@@ -16,13 +16,14 @@ return new class extends Migration
             $table->string('name');
             /*$table->dateTime('start_date')->nullable();
             $table->dateTime('end_date')->nullable();*/
+            $table->foreignId('user_id')->nullable()->constrained()->onDelete('cascade');
             $table->date('date')->nullable();
             $table->string('color')->nullable();
             $table->text('details')->nullable();
             $table->text('inscritos')->nullable();
             $table->integer('participantes')->nullable();
             $table->boolean('en_curso')->default(false);
-            /*$table->enum('estado', ['revision', 'verificado'])->default('revision');*/
+            $table->enum('estado', ['revision', 'verificado'])->default('revision');
             $table->timestamps();
         });
     }
