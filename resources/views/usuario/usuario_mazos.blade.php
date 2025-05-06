@@ -29,7 +29,7 @@
                         <img src="{{ asset('images/logo_db.png') }}" class="card-img-top" alt="...">
                         <div class="card-body">
                             <h5 class="card-title">Dragon Ball: Fusion World</h5>
-                            <a href="/usuario/decks" class="btn btn-primary">Crear Mazo</a>
+                            <a href="/usuario/decksDB" class="btn btn-primary">Crear Mazo</a>
                         </div>
                     </div>
                 </div>

@@ -51,6 +51,7 @@ Route::middleware(['auth', 'role:usuario'])->group(function () {
     Route::get('/usuario/decks', [UsuarioController::class, 'ObtenerDecks'])->name('usuario.decks');
     Route::post('/usuario/dashboard/inscribir', [UsuarioController::class, 'inscribirEvento'])->name('usuario.inscribir');
     Route::get('/usuario/decksOP', [UsuarioController::class, 'apiOnePiece'])->name('usuario.decksOP');
+    Route::get('/usuario/decksDB', [UsuarioController::class, 'apiDragonBall'])->name('usuario.decksDB');
 });
 
 Route::middleware(['auth', 'role:admin'])->group(function () {

@@ -23,8 +23,7 @@
                     <select name="type" class="form-select">
                         <option value="">Tipo</option>
                         <option value="LEADER" {{ request('type') == 'LEADER' ? 'selected' : '' }}>Leader</option>
-                        <option value="CHARACTER" {{ request('type') == 'CHARACTER' ? 'selected' : '' }}>Character
-                        </option>
+                        <option value="CHARACTER" {{ request('type') == 'CHARACTER' ? 'selected' : '' }}>Character</option>
                         <option value="EVENT" {{ request('type') == 'EVENT' ? 'selected' : '' }}>Event</option>
                         <option value="STAGE" {{ request('type') == 'STAGE' ? 'selected' : '' }}>Stage</option>
                     </select>
@@ -33,11 +32,10 @@
                     <select name="color" class="form-select">
                         <option value="">Color</option>
                         <option value="Red" {{ request('color') == 'Red' ? 'selected' : '' }}>Rojo</option>
-                        <option value="Green" {{ request('color') == 'Green' ? 'selected' : '' }}>Verde</option>
                         <option value="Blue" {{ request('color') == 'Blue' ? 'selected' : '' }}>Azul</option>
-                        <option value="Purple" {{ request('color') == 'Purple' ? 'selected' : '' }}>Morado</option>
-                        <option value="Black" {{ request('color') == 'Black' ? 'selected' : '' }}>Negro</option>
+                        <option value="Green" {{ request('color') == 'Green' ? 'selected' : '' }}>Verde</option>
                         <option value="Yellow" {{ request('color') == 'Yellow' ? 'selected' : '' }}>Amarillo</option>
+                        <option value="Black" {{ request('color') == 'Black' ? 'selected' : '' }}>Negro</option>
                     </select>
                 </div>
 

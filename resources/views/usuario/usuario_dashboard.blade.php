@@ -32,6 +32,7 @@
                     <div class="modal-body">
                         <h5 id="eventTitle"></h5>
                         <p id="eventDescription"></p>
+                        <p><strong>Tienda Organizadora:</strong> <span id="eventTienda"></span></p>
                         <p><strong>Fecha:</strong> <span id="eventDate"></span></p>
                         <p><strong>Participantes:</strong> <span id="eventInsc"></span>/<span id="eventPart"></span></p>
                     </div>
@@ -123,6 +124,7 @@
                         let inscritos = event.extendedProps.inscritos ? event.extendedProps.inscritos.split(',') : [];
                         document.getElementById('eventInsc').textContent = inscritos.length;
                         document.getElementById('eventPart').textContent = event.extendedProps.participantes || 'Determinado en tienda';
+                        document.getElementById('eventTienda').textContent = event.extendedProps.user_name
 
                         document.getElementById('btnInscribir').setAttribute('data-event-id', event.id);
 

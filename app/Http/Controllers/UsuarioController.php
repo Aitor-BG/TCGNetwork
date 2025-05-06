@@ -22,6 +22,7 @@ class UsuarioController extends Controller
                 'details' => $event->details,
                 'inscritos' => $event->inscritos,
                 'participantes' => $event->participantes,
+                'user_name' => optional($event->user)->name ?? 'Desconocido'
             ];
         }
 
@@ -48,11 +49,11 @@ class UsuarioController extends Controller
         return view("usuario.usuario_decks");
     }
 
-    public function apiOnePiece(Request $request)
+    /*public function apiOnePiece(Request $request)
     {
         // Parámetros de paginación
         $page = $request->input('page', 1); // Por defecto, comenzamos en la página 1
-        $limit = 30; // Mostramos 30 cartas por página (6 filas x 5 columnas)
+        $limit = 18; // Mostramos 30 cartas por página (6 filas x 5 columnas)
 
         // La URL de la API con los parámetros de paginación
         $url = 'https://apitcg.com/api/one-piece/cards?limit=' . $limit . '&page=' . $page;
@@ -68,8 +69,45 @@ class UsuarioController extends Controller
         } else {
             return response()->json(['error' => 'Error al conectarse con la API'], 500);
         }
+    }*/
+
+    public function apiOnePiece(Request $request)
+    {
+        $page = $request->input('page', 1);
+        $limit = 18;
+
+        $query = [
+            'limit' => $limit,
+            'page' => $page,
+        ];
+
+        if ($request->has('name')) {
+            $query['name'] = $request->input('name');
+        }
+        if ($request->has('type')) {
+            $query['type'] = $request->input('type');
+        }
+        if ($request->has('color')) {
+            $query['color'] = $request->input('color');
+        }
+        
+        
+
+        $url = 'https://apitcg.com/api/one-piece/cards?' . http_build_query($query);
+
+        $respuesta = Http::withHeaders([
+            'x-api-key' => env('API_KEY'),
+        ])->get($url);
+
+        if ($respuesta->successful()) {
+            $datos = $respuesta->json();
+            return view('usuario.usuario_decksOP', compact('datos', 'page', 'limit'));
+        } else {
+            return response()->json(['error' => 'Error al conectarse con la API'], 500);
+        }
     }
-    
+
+
     public function inscribirEvento(Request $request)
     {
         try {
@@ -106,4 +144,39 @@ class UsuarioController extends Controller
         }
     }
 
+    public function apiDragonBall(Request $request)
+    {
+        $page = $request->input('page', 1);
+        $limit = 18;
+
+        $query = [
+            'limit' => $limit,
+            'page' => $page,
+        ];
+
+        if ($request->has('name')) {
+            $query['name'] = $request->input('name');
+        }
+        /*if ($request->has('type')) {
+            $query['type'] = $request->input('type');
+        }*/
+        if ($request->has('color')) {
+            $query['color'] = $request->input('color');
+        }
+        
+        
+
+        $url = 'https://apitcg.com/api/dragon-ball-fusion/cards?' . http_build_query($query);
+
+        $respuesta = Http::withHeaders([
+            'x-api-key' => env('API_KEY'),
+        ])->get($url);
+
+        if ($respuesta->successful()) {
+            $datos = $respuesta->json();
+            return view('usuario.usuario_decksOP', compact('datos', 'page', 'limit'));
+        } else {
+            return response()->json(['error' => 'Error al conectarse con la API'], 500);
+        }
+    }
 }
