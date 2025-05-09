@@ -148,6 +148,7 @@
 
                 const selectedCards = document.getElementById("selectedCards");
                 let savedCards = JSON.parse(localStorage.getItem("selectedCards")) || {};
+                console.log(savedCards)
 
                 if (count > 0) {
                     savedCards[cardName] = { count, image: cardImage };
@@ -172,19 +173,6 @@
                         listItem.appendChild(text);
                         selectedCards.appendChild(listItem);
 
-                        /*listItem.classList.add("list-group-item");
-
-                        const img = document.createElement("img");
-                        img.src = cardImage;
-                        img.alt = cardName;
-                        img.width = 80;
-                        img.height = 80;
-                        img.classList.add("img-fluid", "rounded");
-
-                        const text = document.createTextNode(`${cardName} x${count}`);
-                        listItem.appendChild(img);
-                        listItem.appendChild(text);
-                        selectedCards.appendChild(listItem);*/
                     } else {
                         listItem.childNodes[1].nodeValue = `${cardName} x${count}`;
                     }
@@ -194,7 +182,9 @@
                     if (listItem) selectedCards.removeChild(listItem);
                 }
 
+                console.log(JSON.stringify(savedCards))
                 localStorage.setItem("selectedCards", JSON.stringify(savedCards));
+                console.log(localStorage)
             }
 
             function exportDeck() {

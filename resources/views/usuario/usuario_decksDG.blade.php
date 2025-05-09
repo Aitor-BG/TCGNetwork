@@ -20,26 +20,6 @@
                         value="{{ request('name') }}">
                 </div>
                 <div class="col-md-3">
-                    <select name="cardType" class="form-select">
-                        <option value="">Tipo</option>
-                        <option value="LEADER" {{ request('cardType') == 'LEADER' ? 'selected' : '' }}>Leader</option>
-                        <option value="BATTLE" {{ request('cardType') == 'BATTLE' ? 'selected' : '' }}>Battle</option>
-                        <option value="EXTRA" {{ request('cardType') == 'EXTRA' ? 'selected' : '' }}>Extra</option>
-                        <option value="ENERGY MARKER" {{ request('cardType') == 'ENERGY MARKER' ? 'selected' : '' }}>Energy Marker</option>
-                    </select>
-                </div>
-                <div class="col-md-3">
-                    <select name="color" class="form-select">
-                        <option value="">Color</option>
-                        <option value="Red" {{ request('color') == 'Red' ? 'selected' : '' }}>Rojo</option>
-                        <option value="Blue" {{ request('color') == 'Blue' ? 'selected' : '' }}>Azul</option>
-                        <option value="Green" {{ request('color') == 'Green' ? 'selected' : '' }}>Verde</option>
-                        <option value="Yellow" {{ request('color') == 'Yellow' ? 'selected' : '' }}>Amarillo</option>
-                        <option value="Black" {{ request('color') == 'Black' ? 'selected' : '' }}>Negro</option>
-                    </select>
-                </div>
-
-                <div class="col-md-3">
                     <button type="submit" class="btn btn-primary">Filtrar</button>
                 </div>
             </form>

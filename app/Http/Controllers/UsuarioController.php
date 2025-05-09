@@ -90,8 +90,8 @@ class UsuarioController extends Controller
         if ($request->has('color')) {
             $query['color'] = $request->input('color');
         }
-        
-        
+
+
 
         $url = 'https://apitcg.com/api/one-piece/cards?' . http_build_query($query);
 
@@ -157,14 +157,14 @@ class UsuarioController extends Controller
         if ($request->has('name')) {
             $query['name'] = $request->input('name');
         }
-        /*if ($request->has('type')) {
-            $query['type'] = $request->input('type');
-        }*/
+        if ($request->has('cardType')) {
+            $query['cardType'] = $request->input('cardType');
+        }
         if ($request->has('color')) {
             $query['color'] = $request->input('color');
         }
-        
-        
+
+
 
         $url = 'https://apitcg.com/api/dragon-ball-fusion/cards?' . http_build_query($query);
 
@@ -174,7 +174,35 @@ class UsuarioController extends Controller
 
         if ($respuesta->successful()) {
             $datos = $respuesta->json();
-            return view('usuario.usuario_decksOP', compact('datos', 'page', 'limit'));
+            return view('usuario.usuario_decksDB', compact('datos', 'page', 'limit'));
+        } else {
+            return response()->json(['error' => 'Error al conectarse con la API'], 500);
+        }
+    }
+
+    public function apiDigimon(Request $request)
+    {
+        $page = $request->input('page', 1);
+        $limit = 18;
+
+        $query = [
+            'limit' => $limit,
+            'page' => $page,
+        ];
+
+        if ($request->has('name')) {
+            $query['name'] = $request->input('name');
+        }
+
+        $url = 'https://apitcg.com/api/digimon/cards?' . http_build_query($query);
+
+        $respuesta = Http::withHeaders([
+            'x-api-key' => env('API_KEY'),
+        ])->get($url);
+
+        if ($respuesta->successful()) {
+            $datos = $respuesta->json();
+            return view('usuario.usuario_decksDG', compact('datos', 'page', 'limit'));
         } else {
             return response()->json(['error' => 'Error al conectarse con la API'], 500);
         }
