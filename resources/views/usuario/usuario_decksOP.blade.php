@@ -62,11 +62,11 @@
                                         data-bs-image="{{ $dato['images']['small'] }}" loading="lazy">
                                     <div class="mt-2">
                                         <button class="btn btn-sm btn-danger"
-                                            onclick="updateCounter(this, -1, '{{ $dato['name'] . ' - ' . $dato['code'] }}', '{{ $dato['images']['small'] }}')"
+                                            onclick="updateCounter(this, -1, '{{ $dato['code'] }}', '{{ $dato['images']['small'] }}')"
                                             data-card-name="{{ $dato['name'] . ' - ' . $dato['code'] }}">-</button>
                                         <span class="counter">0</span>
                                         <button class="btn btn-sm btn-success"
-                                            onclick="updateCounter(this, 1, '{{ $dato['name'] . ' - ' . $dato['code'] }}', '{{ $dato['images']['small'] }}')"
+                                            onclick="updateCounter(this, 1, '{{ $dato['code'] }}', '{{ $dato['images']['small'] }}')"
                                             data-card-name="{{ $dato['name'] . ' - ' . $dato['code'] }}">+</button>
                                     </div>
                                 </div>
@@ -195,7 +195,7 @@
                 }
 
                 const deckContent = Object.entries(savedCards)
-                    .map(([cardName, { count }]) => `${cardName} x${count}`)
+                    .map(([cardName, { count }]) => `${count}x${cardName}`)
                     .join("\n");
 
                 const blob = new Blob([deckContent], { type: "text/plain" });
@@ -213,6 +213,11 @@
                 const modalImage = document.getElementById("modalImage");
                 modalImage.src = img.getAttribute("data-bs-image");
             });
+
+            window.addEventListener("beforeunload", function () {
+                localStorage.removeItem("selectedCards");
+            });
+
         </script>
     </body>
 

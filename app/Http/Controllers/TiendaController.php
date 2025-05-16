@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Producto;
 use App\Models\User;
 use Illuminate\Http\Request;
 use App\Models\Event;
@@ -27,6 +28,7 @@ class TiendaController extends Controller
                     'details' => $event->details,
                     'inscritos' => count($inscritos),
                     'participantes' => $event->participantes,
+                    'estado' => $event->estado
                 ];
             }
         }
@@ -36,7 +38,20 @@ class TiendaController extends Controller
 
     public function TiendaSegunda()
     {
-        return view("tienda.tienda_stock");
+        $all_productos = Producto::all();
+
+        $productos = [];
+
+        foreach ($all_productos as $producto) {
+            $productos[] = [
+                'id'=>$producto->id,
+                'nombre'=>$producto->nombre,
+                'descripcion'=>$producto->descripcion,
+                'precio'=>$producto->precio,
+                'cantidad'=>$producto->cantidad
+            ];
+        }
+        return view("tienda.tienda_stock", compact('productos'));
     }
 
     public function TiendaTercera()

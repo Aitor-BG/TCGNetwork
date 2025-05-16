@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use App\Models\Event;
+use App\Models\Producto;
 
 class UsuarioController extends Controller
 {
@@ -36,7 +37,23 @@ class UsuarioController extends Controller
 
     public function UsuarioTercera()
     {
-        return view("usuario.usuario_tienda");
+            {
+        $all_productos = Producto::all();
+
+        $productos = [];
+
+        foreach ($all_productos as $producto) {
+            $productos[] = [
+                'id'=>$producto->id,
+                'nombre'=>$producto->nombre,
+                'descripcion'=>$producto->descripcion,
+                'precio'=>$producto->precio,
+                'cantidad'=>$producto->cantidad,
+                'user_name'=>optional($producto->user)->name ?? 'Desconocido'
+            ];
+        }
+        return view("usuario.usuario_tienda", compact('productos'));
+    }
     }
 
     public function UsuarioCuarta()

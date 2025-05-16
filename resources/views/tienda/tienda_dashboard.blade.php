@@ -32,7 +32,29 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach (collect($events)->sortBy('date') as $event)
+                            @foreach (collect($events)->where('estado','verificado')->sortBy('date') as $event)
+                                <tr>
+                                    <td>{{ \Carbon\Carbon::parse($event['date'])->format('d/m/Y') }}</td>
+                                    <td>{{ $event['title'] }}</td>
+                                    <td>{{ $event['inscritos'] ?? 0 }}</td>
+                                    <td>{{ $event['participantes'] ?? 'N/A' }}</td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                    <br>
+                    <h4>Eventos Por Confirmar</h4>
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Fecha</th>
+                                <th>Evento</th>
+                                <th>Inscritos</th>
+                                <th>Máx. Part.</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (collect($events)->where('estado','revision')->sortBy('date') as $event)
                                 <tr>
                                     <td>{{ \Carbon\Carbon::parse($event['date'])->format('d/m/Y') }}</td>
                                     <td>{{ $event['title'] }}</td>
