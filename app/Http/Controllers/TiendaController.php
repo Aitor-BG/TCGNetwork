@@ -19,7 +19,7 @@ class TiendaController extends Controller
 
         foreach ($all_events as $event) {
             $inscritos = $event->inscritos ? explode(',', $event->inscritos) : [];
-            if ($event->estado == 'verificado' && $event->user_id === auth()->id()) {
+            if ($event->user_id === auth()->id()) {
                 $events[] = [
                     'id' => $event->id,
                     'title' => $event->name,
@@ -44,11 +44,12 @@ class TiendaController extends Controller
 
         foreach ($all_productos as $producto) {
             $productos[] = [
-                'id'=>$producto->id,
-                'nombre'=>$producto->nombre,
-                'descripcion'=>$producto->descripcion,
-                'precio'=>$producto->precio,
-                'cantidad'=>$producto->cantidad
+                'id' => $producto->id,
+                'nombre' => $producto->nombre,
+                'descripcion' => $producto->descripcion,
+                'precio' => $producto->precio,
+                'cantidad' => $producto->cantidad,
+                'user_name' => optional($producto->user)->name ?? 'Desconocido'
             ];
         }
         return view("tienda.tienda_stock", compact('productos'));
@@ -231,6 +232,26 @@ class TiendaController extends Controller
             ->get();
 
         return view('tienda.tienda_clasificacion_final', compact('event', 'clasificacion'));
+    }
+
+    public function incrementarProd($id)
+    {
+        $producto = Producto::findOrFail($id);
+        $producto->cantidad += 1;
+        $producto->save();
+
+        return response()->json(['cantidad' => $producto->cantidad]);
+    }
+
+    public function disminuirProd($id)
+    {
+        $producto = Producto::findOrFail($id);
+        if ($producto->cantidad > 0) {
+            $producto->cantidad -= 1;
+            $producto->save();
+        }
+
+        return response()->json(['cantidad' => $producto->cantidad]);
     }
 
 }

@@ -12,26 +12,66 @@
     </head>
 
     <body>
-    <div class="container my-4">
-        <div class="row">
-            @foreach ($productos as $producto)
-                <div class="col-md-4 mb-4">
-                    <div class="card" style="width: 100%;">
-                        <img src="..." class="card-img-top" alt="Imagen del producto">
-                        <div class="card-body">
-                            <h4 class="card-title">{{ $producto['nombre'] }}</h4>
-                            <p class="card-text">{{ $producto['descripcion'] }}</p>
-                            <p>{{ $producto['precio'] }}€</p>
-                            @if ($producto['cantidad'] < 5)
-                                <p style="color: red;">Últimas unidades</p>
-                            @endif
-                            <a href="#" class="btn btn-success">Agregar a carrito</a>
+        <div class="container my-4">
+            <div class="row">
+                @foreach ($productos as $producto)
+                    @if($producto['user_name'] === Auth::user()->username)
+                        <div class="col-md-4 mb-4">
+                            <div class="card" style="width: 100%;">
+                                <img src="..." class="card-img-top" alt="Imagen del producto">
+                                <div class="card-body text-center">
+                                    <h4 class="card-title">{{ $producto['nombre'] }}</h4>
+                                    <p class="card-text">{{ $producto['descripcion'] }}</p>
+                                    <p>{{ $producto['precio'] }}€</p>
+                                    @if ($producto['cantidad'] < 5)
+                                        <p style="color: red;">Últimas unidades</p>
+                                    @endif
+
+                                    <div class="d-flex justify-content-center align-items-center gap-2">
+                                        <button class="btn btn-danger btn-sm"
+                                            onclick="actualizarStock({{ $producto['id'] }}, 'disminuir', this)">-</button>
+                                        <span id="cantidad-{{ $producto['id'] }}">{{ $producto['cantidad'] }}</span>
+                                        <button class="btn btn-success btn-sm"
+                                            onclick="actualizarStock({{ $producto['id'] }}, 'incrementar', this)">+</button>
+                                    </div>
+                                </div>
+
+                            </div>
                         </div>
-                    </div>
-                </div>
-            @endforeach
+                    @endif
+                @endforeach
+            </div>
         </div>
-    </div>
+        <script>
+            function actualizarStock(id, accion) {
+                fetch(`/tienda/stock/${id}/${accion}`, {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                        'Content-Type': 'application/json'
+                    }
+                })
+                    .then(res => {
+                        if (!res.ok) {
+                            throw new Error('Error de servidor');
+                        }
+                        return res.json();
+                    })
+                    .then(data => {
+                        if (accion === 'disminuir' && data.cantidad <= 0) {
+                            document.getElementById('cantidad-' + id).textContent = 0;
+                        } else {
+                            document.getElementById('cantidad-' + id).textContent = data.cantidad;
+                        }
+                    })
+                    .catch(err => {
+                        console.error("Error al actualizar el stock:", err);
+                        alert("Error al actualizar el stock.");
+                    });
+            }
+
+        </script>
+
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     </body>
 

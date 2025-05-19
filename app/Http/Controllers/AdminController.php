@@ -4,12 +4,26 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Event;
+use App\Models\User;
+use App\Models\Producto;
+use App\Models\Torneo;
 
 class AdminController extends Controller
 {
     public function AdminDashboard()
     {
-        return view("admin.admin_dashboard");
+        $totalUsuarios = User::count();
+        $usuarioTienda = User::where('role', 'tienda')->count();
+        $usuarioUser = User::where('role', 'usuario')->count();
+
+        $totalProductos = Producto::count();
+        $totalEventos = Event::count();
+        $eventoActivo = Event::where('en_curso',true)->count();
+        $eventoNoActivo = Event::where('en_curso',false)->count();
+        $eventoVerificado = Event::where('estado','verificado')->count();
+        $eventoNoVerificado = Event::where('estado','revision')->count();
+
+        return view('admin.admin_dashboard', compact('totalUsuarios','usuarioTienda','usuarioUser','totalProductos','totalEventos','eventoActivo','eventoNoActivo','eventoVerificado','eventoNoVerificado'));
     }
 
     public function AdminSegunda()

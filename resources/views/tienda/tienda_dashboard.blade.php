@@ -13,13 +13,81 @@
 
     <body>
         <div class="container mt-4">
+    <div class="row">
+        <!-- Calendario -->
+        <div class="col-md-6 mb-4">
+            <div id="calendar"></div>
+        </div>
+
+        <!-- Tablas de eventos -->
+        <div class="col-md-6">
+            @php
+                $eventos = collect($events);
+            @endphp
+
+            <!-- Eventos Verificados -->
+            <h4>Eventos Próximos</h4>
+            <div class="table-responsive mb-4">
+                <table class="table table-striped table-bordered">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>Fecha</th>
+                            <th>Evento</th>
+                            <th>Inscritos</th>
+                            <th>Máx. Part.</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @forelse ($eventos->where('estado', 'verificado')->sortBy('date') as $event)
+                            <tr>
+                                <td>{{ \Carbon\Carbon::parse($event['date'])->format('d/m/Y') }}</td>
+                                <td>{{ $event['title'] }}</td>
+                                <td>{{ $event['inscritos'] ?? 0 }}</td>
+                                <td>{{ $event['participantes'] ?? 'N/A' }}</td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="4" class="text-center text-muted">No hay eventos verificados.</td>
+                            </tr>
+                        @endforelse
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Eventos Por Confirmar -->
+            <h4>Eventos Por Confirmar</h4>
+            <div class="table-responsive">
+                <table class="table table-striped table-bordered">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>Fecha</th>
+                            <th>Evento</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @forelse ($eventos->where('estado', 'revision')->sortBy('date') as $event)
+                            <tr>
+                                <td>{{ \Carbon\Carbon::parse($event['date'])->format('d/m/Y') }}</td>
+                                <td>{{ $event['title'] }}</td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="2" class="text-center text-muted">No hay eventos por confirmar.</td>
+                            </tr>
+                        @endforelse
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+        <!--<div class="container mt-4">
             <div class="row">
-                <!-- Calendario -->
                 <div class="col-md-6">
                     <div id="calendar"></div>
                 </div>
 
-                <!-- Tabla de eventos -->
                 <div class="col-md-6">
                     <h4>Eventos próximos</h4>
                     <table class="table table-striped">
@@ -66,7 +134,7 @@
                     </table>
                 </div>
             </div>
-        </div>
+        </div>-->
 
 
         <!-- Modal -->
@@ -146,6 +214,7 @@
 
 
         <script>
+            const eventosVerificados = @json(collect($events)->where('estado', 'verificado')->values());
             document.addEventListener('DOMContentLoaded', function () {
                 var calendarEl = document.getElementById('calendar');
 
@@ -156,7 +225,7 @@
                         center: 'title',
                         right: 'next'
                     },
-                    events: @json($events),
+                    events: eventosVerificados,
                     locale: 'es',
                     firstDay: 1,
                     eventClick: function (info) {
