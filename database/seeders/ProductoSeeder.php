@@ -19,7 +19,8 @@ class ProductoSeeder extends Seeder
                 'nombre'=>'Case EB02 - One Piece',
                 'descripcion'=>'Caja contenedora de 12 Booster Boxes',
                 'precio'=>1200,
-                'cantidad'=>12
+                'cantidad'=>12,
+                'estado'=>'revision'
             ]
         ]);
     }

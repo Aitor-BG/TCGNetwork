@@ -13,6 +13,9 @@
 
     <body>
         <div class="container my-4">
+            <button href="" class="btn btn-success">Agregar Producto</button>
+            <br>
+            <br>
             <div class="row">
                 @foreach ($productos as $producto)
                     @if($producto['user_name'] === Auth::user()->username)

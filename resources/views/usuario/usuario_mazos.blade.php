@@ -20,7 +20,7 @@
                 <div class="card text-center shadow" style="width: 18rem;">
                     <img src="{{ asset('images/logo_op.png') }}" class="card-img-top" alt="One Piece Logo">
                     <div class="card-body">
-                        <h5 class="card-title">One Piece TCG</h5>
+                        <h5 class="card-title">One Piece Card Game</h5>
                         <a href="/usuario/decksOP" class="btn btn-primary">Crear Mazo</a>
                     </div>
                 </div>
@@ -40,7 +40,7 @@
                 <div class="card text-center shadow" style="width: 18rem;">
                     <img src="{{ asset('images/logo_dg.png') }}" class="card-img-top" alt="Digimon Logo">
                     <div class="card-body">
-                        <h5 class="card-title">Digimon</h5>
+                        <h5 class="card-title">Digimon Card Game</h5>
                         <a href="/usuario/decksDG" class="btn btn-primary">Crear Mazo</a>
                     </div>
                 </div>
@@ -48,10 +48,10 @@
 
             <div class="col d-flex justify-content-center">
                 <div class="card text-center shadow" style="width: 18rem;">
-                    <img src="{{ asset('images/logo_pk.png') }}" class="card-img-top" alt="Magic Logo">
+                    <img src="{{ asset('images/logo_GD.png') }}" class="card-img-top" alt="Gundam Logo">
                     <div class="card-body">
-                        <h5 class="card-title">Magic</h5>
-                        <a href="/usuario/decks" class="btn btn-primary">Crear Mazo</a>
+                        <h5 class="card-title">Gundam Card Game</h5>
+                        <a href="/usuario/decksGD" class="btn btn-primary">Crear Mazo</a>
                     </div>
                 </div>
             </div>

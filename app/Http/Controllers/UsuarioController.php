@@ -217,4 +217,32 @@ class UsuarioController extends Controller
             return response()->json(['error' => 'Error al conectarse con la API'], 500);
         }
     }
+
+        public function apiGundam(Request $request)
+    {
+        $page = $request->input('page', 1);
+        $limit = 18;
+
+        $query = [
+            'limit' => $limit,
+            'page' => $page,
+        ];
+
+        if ($request->has('name')) {
+            $query['name'] = $request->input('name');
+        }
+
+        $url = 'https://apitcg.com/api/gundam/cards?' . http_build_query($query);
+
+        $respuesta = Http::withHeaders([
+            'x-api-key' => env('API_KEY'),
+        ])->get($url);
+
+        if ($respuesta->successful()) {
+            $datos = $respuesta->json();
+            return view('usuario.usuario_decksGD', compact('datos', 'page', 'limit'));
+        } else {
+            return response()->json(['error' => 'Error al conectarse con la API'], 500);
+        }
+    }
 }

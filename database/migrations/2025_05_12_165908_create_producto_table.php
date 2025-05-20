@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('descripcion');
             $table->integer('precio');
             $table->integer('cantidad');
+            $table->enum('estado', ['revision', 'verificado'])->default('revision');
             $table->timestamps();
         });
     }

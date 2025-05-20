@@ -18,6 +18,7 @@ class ProductoFactory extends Factory
             'descripcion' => $this->faker->sentence(), // Descripción aleatoria
             'precio' => $this->faker->randomFloat(2, 1, 500), // Precio entre 1.00 y 500.00
             'cantidad' => $this->faker->numberBetween(1, 100), // Cantidad entre 1 y 100
+            'estado' => 'revision'
         ];
     }
 }

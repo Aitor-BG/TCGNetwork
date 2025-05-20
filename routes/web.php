@@ -35,8 +35,8 @@ Route::middleware('auth')->group(function () {
 Route::middleware(['auth', 'role:tienda'])->group(function () {
     Route::get('/tienda/dashboard', [TiendaController::class, 'TiendaDashboard'])->name('tienda.dashboard');
     Route::get('/tienda/stock', [TiendaController::class, 'TiendaSegunda'])->name('tienda.seg');
-    Route::post('/tienda/stock/{id}/incrementar',[TiendaController::class,'incrementarProd'])->name('tienda.prodInc');
-    Route::post('/tienda/stock/{id}/disminuir',[TiendaController::class,'disminuirProd'])->name('tienda.prodDis');
+    Route::post('/tienda/stock/{id}/incrementar', [TiendaController::class, 'incrementarProd'])->name('tienda.prodInc');
+    Route::post('/tienda/stock/{id}/disminuir', [TiendaController::class, 'disminuirProd'])->name('tienda.prodDis');
     Route::get('/tienda/distribuidora', [TiendaController::class, 'TiendaTercera'])->name('tienda.ter');
     Route::post('/tienda/torneos/events', [TiendaController::class, 'store'])->name('tienda.events.store');
     Route::get('/tienda/gesTorneo/{id}', [TiendaController::class, 'TiendaGestionarTorneo'])->name('tienda.gesTorneo');
@@ -51,12 +51,13 @@ Route::middleware(['auth', 'role:usuario'])->group(function () {
     Route::get('/usuario/mazos', [UsuarioController::class, 'UsuarioSegunda'])->name('usuario.seg');
     Route::get('/usuario/tienda', [UsuarioController::class, 'UsuarioTercera'])->name('usuario.ter');
     Route::get('/usuario/tienda/carrito', [UsuarioController::class, 'UsuarioCuarta'])->name('usuario.carrito');
-    Route::post('/usuario/tienda/carrito/compra',[UsuarioController::class,'procesarCompra'])->name('usuario.compra');
+    Route::post('/usuario/tienda/carrito/compra', [UsuarioController::class, 'procesarCompra'])->name('usuario.compra');
     Route::get('/usuario/decks', [UsuarioController::class, 'ObtenerDecks'])->name('usuario.decks');
     Route::post('/usuario/dashboard/inscribir', [UsuarioController::class, 'inscribirEvento'])->name('usuario.inscribir');
     Route::get('/usuario/decksOP', [UsuarioController::class, 'apiOnePiece'])->name('usuario.decksOP');
     Route::get('/usuario/decksDB', [UsuarioController::class, 'apiDragonBall'])->name('usuario.decksDB');
     Route::get('/usuario/decksDG', [UsuarioController::class, 'apiDigimon'])->name('usuario.decksDG');
+    Route::get('/usuario/decksGD', [UsuarioController::class, 'apiGundam'])->name('usuario.decksGD');
 });
 
 Route::middleware(['auth', 'role:admin'])->group(function () {
@@ -64,6 +65,7 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/admin/notificaciones', [AdminController::class, 'AdminSegunda'])->name('admin.seg');
     Route::get('/admin/logs', [AdminController::class, 'AdminTercera'])->name('admin.ter');
     Route::post('/admin/eventos/{id}/verificar', [AdminController::class, 'verificarEvento'])->name('admin.eventos.verificar');
+    Route::post('/admin/productos/{id}/verificar', [AdminController::class, 'verificarProductos'])->name('admin.productos.verificar');
 
 });
 

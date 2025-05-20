@@ -18,18 +18,20 @@ class AdminController extends Controller
 
         $totalProductos = Producto::count();
         $totalEventos = Event::count();
-        $eventoActivo = Event::where('en_curso',true)->count();
-        $eventoNoActivo = Event::where('en_curso',false)->count();
-        $eventoVerificado = Event::where('estado','verificado')->count();
-        $eventoNoVerificado = Event::where('estado','revision')->count();
+        $eventoActivo = Event::where('en_curso', true)->count();
+        $eventoNoActivo = Event::where('en_curso', false)->count();
+        $eventoVerificado = Event::where('estado', 'verificado')->count();
+        $eventoNoVerificado = Event::where('estado', 'revision')->count();
 
-        return view('admin.admin_dashboard', compact('totalUsuarios','usuarioTienda','usuarioUser','totalProductos','totalEventos','eventoActivo','eventoNoActivo','eventoVerificado','eventoNoVerificado'));
+        return view('admin.admin_dashboard', compact('totalUsuarios', 'usuarioTienda', 'usuarioUser', 'totalProductos', 'totalEventos', 'eventoActivo', 'eventoNoActivo', 'eventoVerificado', 'eventoNoVerificado'));
     }
 
     public function AdminSegunda()
     {
         $all_events = Event::all();
         $events = [];
+        $all_products = Producto::all();
+        $products = [];
 
         foreach ($all_events as $event) {
             $inscritos = $event->inscritos ? explode(',', $event->inscritos) : [];
@@ -45,7 +47,19 @@ class AdminController extends Controller
             }
         }
 
-        return view("admin.admin_notificaciones", compact('events'));
+        foreach ($all_products as $product) {
+            if ($product->estado == 'revision') {
+                $products[] = [
+                    'id'=>$product->id,
+                    'nombre'=>$product->nombre,
+                    'descripcion'=>$product->descripcion,
+                    'precio'=>$product->precio,
+                    'user_name'=>optional($product->user)->name ?? 'Desconocido'
+                ];
+            }
+        }
+
+        return view("admin.admin_notificaciones", compact('events','products'));
     }
 
 
@@ -61,5 +75,13 @@ class AdminController extends Controller
         $evento->estado = 'verificado';
         $evento->save();
         return redirect()->back()->with('success', 'Evento verificado correctamente.');
+    }
+
+    public function verificarProductos($id)
+    {
+        $producto = Producto::findOrFail($id);
+        $producto->estado = 'verificado';
+        $producto->save();
+        return redirect()->back()->with('success', 'Producto verificado correctamente.');
     }
 }
