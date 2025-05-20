@@ -15,16 +15,20 @@ class UsuarioController extends Controller
 
         $events = [];
         foreach ($all_events as $event) {
-            $events[] = [
-                'id' => $event->id,
-                'title' => $event->name,
-                'date' => $event->date,
-                'color' => $event->color,
-                'details' => $event->details,
-                'inscritos' => $event->inscritos,
-                'participantes' => $event->participantes,
-                'user_name' => optional($event->user)->name ?? 'Desconocido'
-            ];
+            if ($event->estado != 'revision') {
+                $events[] = [
+                    'id' => $event->id,
+                    'title' => $event->name,
+                    'date' => $event->date,
+                    'color' => $event->color,
+                    'details' => $event->details,
+                    'inscritos' => $event->inscritos,
+                    'participantes' => $event->participantes,
+                    'user_name' => optional($event->user)->name ?? 'Desconocido',
+                    'estado' => $event->estado
+                ];
+            }
+
         }
 
         return view('usuario.usuario_dashboard', compact('events'));
@@ -218,7 +222,7 @@ class UsuarioController extends Controller
         }
     }
 
-        public function apiGundam(Request $request)
+    public function apiGundam(Request $request)
     {
         $page = $request->input('page', 1);
         $limit = 18;

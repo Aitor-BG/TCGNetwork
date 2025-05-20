@@ -18,7 +18,7 @@
             <br>
             <div class="row">
                 @foreach ($productos as $producto)
-                    @if($producto['user_name'] === Auth::user()->username)
+                    <!--@if($producto['user_name'] === Auth::user()->username)-->
                         <div class="col-md-4 mb-4">
                             <div class="card" style="width: 100%;">
                                 <img src="..." class="card-img-top" alt="Imagen del producto">
@@ -41,7 +41,7 @@
 
                             </div>
                         </div>
-                    @endif
+                    <!--@endif-->
                 @endforeach
             </div>
         </div>

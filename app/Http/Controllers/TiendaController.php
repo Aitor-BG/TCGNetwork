@@ -43,14 +43,17 @@ class TiendaController extends Controller
         $productos = [];
 
         foreach ($all_productos as $producto) {
-            $productos[] = [
-                'id' => $producto->id,
-                'nombre' => $producto->nombre,
-                'descripcion' => $producto->descripcion,
-                'precio' => $producto->precio,
-                'cantidad' => $producto->cantidad,
-                'user_name' => optional($producto->user)->name ?? 'Desconocido'
-            ];
+            if ($producto->user_id === auth()->id() && $producto->estado === 'verificado') {
+                $productos[] = [
+                    'id' => $producto->id,
+                    'nombre' => $producto->nombre,
+                    'descripcion' => $producto->descripcion,
+                    'precio' => $producto->precio,
+                    'cantidad' => $producto->cantidad,
+                    'user_name' => optional($producto->user)->name ?? 'Desconocido'
+                ];
+            }
+
         }
         return view("tienda.tienda_stock", compact('productos'));
     }
