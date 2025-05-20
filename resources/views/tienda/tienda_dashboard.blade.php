@@ -153,7 +153,8 @@
                     </div>
                     <div class="modal-footer">
                         <a id="launchEventBtn" class="btn btn-success" href="#">Lanzar Evento</a>
-                        <button type="button" class="btn btn-warning" data-bs-dismiss="modal">Editar</button>
+                        <button type="button" class="btn btn-warning" onclick="openEditModal()"
+                            data-bs-dismiss="modal">Editar</button>
                         <input type="hidden" id="deleteEventId" name="event_id" />
                         <form id="deleteForm" method="POST">
                             @csrf
@@ -212,9 +213,57 @@
             </div>
         </div>
 
+        <div class="modal fade" id="editEventModal" tabindex="-1" aria-labelledby="editEventModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog">
+                <form method="POST" id="editEventForm">
+                    @csrf
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Editar Evento</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                aria-label="Cerrar"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="mb-3">
+                                <label for="edit_title" class="form-label">Título del Evento</label>
+                                <input type="text" name="title" id="edit_title" class="form-control" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="edit_color" class="form-label">Color del Evento</label>
+                                <input type="color" name="color" id="edit_color" class="form-control">
+                            </div>
+                            <div class="mb-3">
+                                <label for="edit_description" class="form-label">Descripción del evento</label>
+                                <input type="text" name="description" id="edit_description" class="form-control"
+                                    required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="edit_participantes" class="form-label">Máximos participantes</label>
+                                <input type="number" name="participantes" id="edit_participantes" class="form-control"
+                                    required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="edit_date" class="form-label">Fecha</label>
+                                <input type="date" class="form-control" name="date" id="edit_date" readonly>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+
 
         <script>
             const eventosVerificados = @json(collect($events)->where('estado', 'verificado')->values());
+
+            let selectedEvent = null; // Guardamos el evento seleccionado
+
             document.addEventListener('DOMContentLoaded', function () {
                 var calendarEl = document.getElementById('calendar');
 
@@ -229,39 +278,57 @@
                     locale: 'es',
                     firstDay: 1,
                     eventClick: function (info) {
-                        var event = info.event;
-                        document.getElementById('eventTitle').textContent = event.title;
-                        document.getElementById('eventDescription').textContent = event.extendedProps.details || 'Sin descripción';
-                        document.getElementById('eventDate').textContent = event.start.toLocaleDateString('es-ES');
-                        document.getElementById('eventInsc').textContent = event.extendedProps.inscritos || 0;
-                        document.getElementById('eventPart').textContent = event.extendedProps.participantes || 'Determinado en tienda';
+                        selectedEvent = info.event;
 
-                        var launchButton = document.getElementById('launchEventBtn');
-                        if (event.extendedProps.inscritos >= 4) {
+                        document.getElementById('eventTitle').textContent = selectedEvent.title;
+                        document.getElementById('eventDescription').textContent = selectedEvent.extendedProps.details || 'Sin descripción';
+                        document.getElementById('eventDate').textContent = selectedEvent.start.toLocaleDateString('es-ES');
+                        document.getElementById('eventInsc').textContent = selectedEvent.extendedProps.inscritos || 0;
+                        document.getElementById('eventPart').textContent = selectedEvent.extendedProps.participantes || 'N/A';
+
+                        // Mostrar u ocultar botón "Lanzar"
+                        const launchButton = document.getElementById('launchEventBtn');
+                        if (selectedEvent.extendedProps.inscritos >= 4) {
                             launchButton.style.display = 'inline-block';
-                            launchButton.href = '/tienda/gesTorneo/' + event.id;
+                            launchButton.href = '/tienda/gesTorneo/' + selectedEvent.id;
                         } else {
                             launchButton.style.display = 'none';
                             launchButton.href = '#';
-                            console.warn('ID del evento no definido');
                         }
 
-                        document.getElementById('deleteForm').action = '/tienda/eventos/' + event.id + '/eliminar';
+                        // Configurar acción del formulario de eliminación
+                        document.getElementById('deleteForm').action = '/tienda/eventos/' + selectedEvent.id + '/eliminar';
 
-                        var myModal = new bootstrap.Modal(document.getElementById('eventModal'));
+                        const myModal = new bootstrap.Modal(document.getElementById('eventModal'));
                         myModal.show();
                     },
+
                     dateClick: function (info) {
                         document.getElementById('date').value = info.dateStr;
 
-                        var createModal = new bootstrap.Modal(document.getElementById('createEventModal'));
+                        const createModal = new bootstrap.Modal(document.getElementById('createEventModal'));
                         createModal.show();
                     },
-
                 });
 
                 calendar.render();
             });
+
+            function openEditModal() {
+                if (!selectedEvent) return;
+
+                document.getElementById('edit_title').value = selectedEvent.title;
+                document.getElementById('edit_color').value = selectedEvent.backgroundColor || '#000000';
+                document.getElementById('edit_description').value = selectedEvent.extendedProps.details || '';
+                document.getElementById('edit_participantes').value = selectedEvent.extendedProps.participantes || 0;
+                document.getElementById('edit_date').value = selectedEvent.startStr;
+
+                // Cambia el action al endpoint correcto (PUT)
+                document.getElementById('editEventForm').action = '/tienda/eventos/' + selectedEvent.id + '/editar';
+
+                const editModal = new bootstrap.Modal(document.getElementById('editEventModal'));
+                editModal.show();
+            }
 
 
         </script>

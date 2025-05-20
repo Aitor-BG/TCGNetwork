@@ -96,6 +96,56 @@ class TiendaController extends Controller
         return redirect()->back()->with('success', 'Evento eliminado correctamente.');
     }
 
+    public function editarEvento(Request $request, $id)
+    {
+        $validated = $request->validate([
+            'title' => 'required|string|max:255',
+            'date' => 'required|date',
+            'color' => 'required|string',
+            'description' => 'required|string',
+            'participantes' => 'required|integer'
+        ]);
+
+        $event = Event::findOrFail($id);
+
+        // Solo permite editar sus propios eventos
+        if ($event->user_id !== auth()->id()) {
+            abort(403, 'No autorizado');
+        }
+
+        $event->name = $validated['title'];
+        $event->date = $validated['date'];
+        $event->color = $validated['color'];
+        $event->details = $validated['description'];
+        $event->participantes = $validated['participantes'];
+        $event->estado = 'revision';
+
+        $event->save();
+
+        return redirect()->route('tienda.dashboard')->with('success', 'Evento actualizado correctamente');
+    }
+
+    public function crearProducto(Request $request)
+    {
+        $validated = $request->validate([
+            'nombre' => 'required|string|max:255',
+            'descripcion' => 'required|string',
+            'precio' => 'required|numeric|min:0',
+            'cantidad' => 'required|integer|min:0',
+        ]);
+
+        $producto = new Producto();
+        $producto->nombre = $validated['nombre'];
+        $producto->descripcion = $validated['descripcion'];
+        $producto->precio = $validated['precio'];
+        $producto->cantidad = $validated['cantidad'];
+        $producto->user_id = auth()->id();
+        $producto->save();
+
+        return redirect()->back()->with('success', 'Producto creado correctamente.');
+    }
+
+
     public function TiendaGestionarTorneo($id)
     {
         $event = Event::find($id);

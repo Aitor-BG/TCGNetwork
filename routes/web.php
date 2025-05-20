@@ -35,6 +35,7 @@ Route::middleware('auth')->group(function () {
 Route::middleware(['auth', 'role:tienda'])->group(function () {
     Route::get('/tienda/dashboard', [TiendaController::class, 'TiendaDashboard'])->name('tienda.dashboard');
     Route::get('/tienda/stock', [TiendaController::class, 'TiendaSegunda'])->name('tienda.seg');
+    Route::post('/tienda/stock/crear', [TiendaController::class, 'crearProducto'])->name('tienda.producto.store');
     Route::post('/tienda/stock/{id}/incrementar', [TiendaController::class, 'incrementarProd'])->name('tienda.prodInc');
     Route::post('/tienda/stock/{id}/disminuir', [TiendaController::class, 'disminuirProd'])->name('tienda.prodDis');
     Route::get('/tienda/distribuidora', [TiendaController::class, 'TiendaTercera'])->name('tienda.ter');
@@ -44,6 +45,7 @@ Route::middleware(['auth', 'role:tienda'])->group(function () {
     Route::post('/tienda/gesTorneo/{id}/siguiente-ronda', [TiendaController::class, 'siguienteRonda'])->name('torneo.siguienteRonda');
     Route::get('/tienda/gesTorneo/{id}/finalizado', [TiendaController::class, 'mostrarClasificacionFinal'])->name('torneo.finalizado');
     Route::post('/tienda/eventos/{id}/eliminar', [TiendaController::class, 'eliminarEvento'])->name('tienda.eventos.eliminar');
+    Route::post('tienda/eventos/{id}/editar',[TiendaController::class,'editarEvento'])->name('tienda.eventos.editar');
 });
 
 Route::middleware(['auth', 'role:usuario'])->group(function () {

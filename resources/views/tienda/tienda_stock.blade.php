@@ -13,7 +13,7 @@
 
     <body>
         <div class="container my-4">
-            <button href="" class="btn btn-success">Agregar Producto</button>
+            <button onclick="openCreateModal()" class="btn btn-success">Agregar Producto</button>
             <br>
             <br>
             <div class="row">
@@ -45,6 +45,47 @@
                 @endforeach
             </div>
         </div>
+
+        <!-- Modal Crear Producto -->
+        <div class="modal fade" id="createProductModal" tabindex="-1" aria-labelledby="createProductModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog">
+                <form method="POST" action="{{ route('tienda.producto.store') }}">
+                    @csrf
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="createProductModalLabel">Nuevo Producto</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                aria-label="Cerrar"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="mb-3">
+                                <label for="nombre" class="form-label">Nombre del Producto</label>
+                                <input type="text" name="nombre" class="form-control" id="nombre" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="descripcion" class="form-label">Descripción</label>
+                                <textarea name="descripcion" class="form-control" id="descripcion" required></textarea>
+                            </div>
+                            <div class="mb-3">
+                                <label for="precio" class="form-label">Precio (€)</label>
+                                <input type="number" name="precio" class="form-control" id="precio" step="0.01"
+                                    required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="cantidad" class="form-label">Cantidad en stock</label>
+                                <input type="number" name="cantidad" class="form-control" id="cantidad" required>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-primary">Guardar Producto</button>
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
         <script>
             function actualizarStock(id, accion) {
                 fetch(`/tienda/stock/${id}/${accion}`, {
@@ -73,6 +114,10 @@
                     });
             }
 
+            function openCreateModal() {
+                const modal = new bootstrap.Modal(document.getElementById('createProductModal'));
+                modal.show();
+            }
         </script>
 
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
