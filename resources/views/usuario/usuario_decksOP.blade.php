@@ -11,7 +11,7 @@
 
     <body>
         <div class="container mt-5">
-            <h1 class="text-center mb-4">Datos de la API</h1>
+            <h1 class="text-center mb-4">One Piece TCG</h1>
 
             <!-- FILTROS -->
             <form method="GET" class="row mb-4">
@@ -48,8 +48,10 @@
 
             <div class="row justify-content-center">
                 <div class="col-4">
-                    <h5>Cartas Seleccionadas:</h5>
-                    <ul id="selectedCards" class="list-group"></ul>
+                    <h5>Cartas Seleccionadas: <span id="totalCardsCount">0</span>/51</h5>
+                    <!--<ul id="selectedCards" class="list-group"></ul>-->
+                    <ul id="selectedCards" class="list-group" style="max-height: 500px; overflow-y: auto;"></ul>
+                    <br>
                     <button class="btn btn-info" onclick="exportDeck()">Exportar deck</button>
                 </div>
                 <div class="col-8">
@@ -65,9 +67,13 @@
                                             onclick="updateCounter(this, -1, '{{ $dato['code'] }}', '{{ $dato['images']['small'] }}')"
                                             data-card-name="{{ $dato['name'] . ' - ' . $dato['code'] }}">-</button>
                                         <span class="counter">0</span>
+                                        <!--<button class="btn btn-sm btn-success"
+                                                        onclick="updateCounter(this, 1, '{{ $dato['code'] }}', '{{ $dato['images']['small'] }}')"
+                                                        data-card-name="{{ $dato['name'] . ' - ' . $dato['code'] }}">+</button>-->
                                         <button class="btn btn-sm btn-success"
-                                            onclick="updateCounter(this, 1, '{{ $dato['code'] }}', '{{ $dato['images']['small'] }}')"
+                                            onclick="updateCounter(this, 1, '{{ $dato['code'] }}', '{{ $dato['images']['small'] }}', '{{ $dato['type'] }}')"
                                             data-card-name="{{ $dato['name'] . ' - ' . $dato['code'] }}">+</button>
+
                                     </div>
                                 </div>
                             </div>
@@ -120,16 +126,24 @@
                     if (count > 0) {
                         const listItem = document.createElement("li");
                         listItem.id = `card-${cardName}`;
-                        listItem.classList.add("list-group-item");
+                        listItem.classList.add("list-group-item", "d-flex", "align-items-center", "gap-2");
 
                         const img = document.createElement("img");
                         img.src = image;
                         img.alt = cardName;
-                        img.classList.add("img-fluid", "rounded");
+                        img.width = 50;
+                        img.height = 50;
+                        img.classList.add("rounded");
+
+                        const text = document.createElement("span");
+                        text.textContent = `${cardName} x${count}`;
+
                         listItem.appendChild(img);
+                        listItem.appendChild(text);
                         selectedCards.appendChild(listItem);
                     }
                 }
+
 
                 document.querySelectorAll(".container").forEach(container => {
                     const cardName = container.querySelector("button")?.getAttribute("data-card-name");
@@ -138,9 +152,11 @@
                     const count = savedCards[cardName]?.count || 0;
                     counter.innerText = count;
                 });
+
+                updateTotalCardCount();
             });
 
-            function updateCounter(button, change, cardName, cardImage) {
+            /*function updateCounter(button, change, cardName, cardImage, cardType) {
                 const counter = button.parentElement.querySelector(".counter");
                 let count = parseInt(counter.innerText);
                 count = Math.min(4, Math.max(0, count + change));
@@ -174,7 +190,12 @@
                         selectedCards.appendChild(listItem);
 
                     } else {
-                        listItem.childNodes[1].nodeValue = `${cardName} x${count}`;
+                        
+                        const textSpan = listItem.querySelector("span");
+                        if (textSpan) {
+                            textSpan.textContent = `${cardName} x${count}`;
+                        }
+
                     }
                 } else {
                     delete savedCards[cardName];
@@ -185,7 +206,157 @@
                 console.log(JSON.stringify(savedCards))
                 localStorage.setItem("selectedCards", JSON.stringify(savedCards));
                 console.log(localStorage)
+            }*/
+
+            /*function updateCounter(button, change, cardName, cardImage, cardType) {
+                const counter = button.parentElement.querySelector(".counter");
+                let currentCount = parseInt(counter.innerText);
+                let newCount = Math.min(4, Math.max(0, currentCount + change));
+
+                const selectedCards = document.getElementById("selectedCards");
+                let savedCards = JSON.parse(localStorage.getItem("selectedCards")) || {};
+
+                // 🚫 Restricción para cartas tipo LEADER
+                if (cardType === "LEADER" && change > 0) {
+                    const existingLeader = Object.entries(savedCards).find(([_, value]) => value.type === "LEADER");
+
+                    if (existingLeader && !savedCards[cardName]) {
+                        alert("Solo puedes agregar un líder al mazo.");
+                        return;
+                    }
+
+                    if (savedCards[cardName]?.count >= 1) {
+                        alert("Solo puedes tener un líder.");
+                        return;
+                    }
+
+                    newCount = 1; // fuerza máximo 1
+                }
+
+                // Actualiza contador en la carta
+                counter.innerText = newCount;
+
+                if (newCount > 0) {
+                    savedCards[cardName] = { count: newCount, image: cardImage, type: cardType };
+
+                    let listItem = document.getElementById(`card-${cardName}`);
+                    if (!listItem) {
+                        listItem = document.createElement("li");
+                        listItem.id = `card-${cardName}`;
+                        listItem.classList.add("list-group-item", "d-flex", "align-items-center", "gap-2");
+
+                        const img = document.createElement("img");
+                        img.src = cardImage;
+                        img.alt = cardName;
+                        img.width = 50;
+                        img.height = 50;
+                        img.classList.add("rounded");
+
+                        const text = document.createElement("span");
+                        text.textContent = `${cardName} x${newCount}`;
+
+                        listItem.appendChild(img);
+                        listItem.appendChild(text);
+                        selectedCards.appendChild(listItem);
+                    } else {
+                        const textSpan = listItem.querySelector("span");
+                        if (textSpan) {
+                            textSpan.textContent = `${cardName} x${newCount}`;
+                        }
+                    }
+                } else {
+                    delete savedCards[cardName];
+                    const listItem = document.getElementById(`card-${cardName}`);
+                    if (listItem) selectedCards.removeChild(listItem);
+                }
+
+                localStorage.setItem("selectedCards", JSON.stringify(savedCards));
+            }*/
+
+            function updateCounter(button, change, cardName, cardImage, cardType) {
+                const counter = button.parentElement.querySelector(".counter");
+                let currentCount = parseInt(counter.innerText);
+                let newCount = Math.min(4, Math.max(0, currentCount + change));
+
+                let savedCards = JSON.parse(localStorage.getItem("selectedCards")) || {};
+
+                // 🚫 Restricción para cartas tipo LEADER
+                if (cardType === "LEADER" && change > 0) {
+                    const existingLeader = Object.entries(savedCards).find(([_, value]) => value.type === "LEADER");
+
+                    if (existingLeader && !savedCards[cardName]) {
+                        alert("Solo puedes agregar un líder al mazo.");
+                        return;
+                    }
+
+                    if (savedCards[cardName]?.count >= 1) {
+                        alert("Solo puedes tener un líder.");
+                        return;
+                    }
+
+                    newCount = 1;
+                }
+
+                // ✅ Limite total de cartas (51 máx.)
+                const totalCards = Object.values(savedCards).reduce((sum, card) => sum + card.count, 0);
+                const isNewCard = !savedCards[cardName];
+                const currentCardCount = savedCards[cardName]?.count || 0;
+                const totalAfterChange = totalCards - currentCardCount + newCount;
+
+                if (totalAfterChange > 51) {
+                    alert("No puedes añadir más de 51 cartas en total al mazo.");
+                    return;
+                }
+
+                // Actualiza visualmente el contador
+                counter.innerText = newCount;
+
+                const selectedCards = document.getElementById("selectedCards");
+
+                if (newCount > 0) {
+                    savedCards[cardName] = { count: newCount, image: cardImage, type: cardType };
+
+                    let listItem = document.getElementById(`card-${cardName}`);
+                    if (!listItem) {
+                        listItem = document.createElement("li");
+                        listItem.id = `card-${cardName}`;
+                        listItem.classList.add("list-group-item", "d-flex", "align-items-center", "gap-2");
+
+                        const img = document.createElement("img");
+                        img.src = cardImage;
+                        img.alt = cardName;
+                        img.width = 50;
+                        img.height = 50;
+                        img.classList.add("rounded");
+
+                        const text = document.createElement("span");
+                        text.textContent = `${cardName} x${newCount}`;
+
+                        listItem.appendChild(img);
+                        listItem.appendChild(text);
+                        selectedCards.appendChild(listItem);
+                    } else {
+                        const textSpan = listItem.querySelector("span");
+                        if (textSpan) {
+                            textSpan.textContent = `${cardName} x${newCount}`;
+                        }
+                    }
+                } else {
+                    delete savedCards[cardName];
+                    const listItem = document.getElementById(`card-${cardName}`);
+                    if (listItem) selectedCards.removeChild(listItem);
+                }
+
+                localStorage.setItem("selectedCards", JSON.stringify(savedCards));
+                updateTotalCardCount();
             }
+
+function updateTotalCardCount() {
+    const savedCards = JSON.parse(localStorage.getItem("selectedCards")) || {};
+    const totalCards = Object.values(savedCards).reduce((sum, card) => sum + card.count, 0);
+    document.getElementById("totalCardsCount").innerText = totalCards;
+}
+
 
             function exportDeck() {
                 const savedCards = JSON.parse(localStorage.getItem("selectedCards")) || {};
@@ -214,9 +385,39 @@
                 modalImage.src = img.getAttribute("data-bs-image");
             });
 
-            window.addEventListener("beforeunload", function () {
-                localStorage.removeItem("selectedCards");
+            let unloadTimer;
+
+            // 1. Detectar recarga
+            window.addEventListener("beforeunload", () => {
+                sessionStorage.setItem("isReload", "true");
             });
+
+            // 2. Detectar salida real
+            document.addEventListener("visibilitychange", () => {
+                if (document.visibilityState === "hidden") {
+                    unloadTimer = setTimeout(() => {
+                        const isReload = sessionStorage.getItem("isReload");
+
+                        if (!isReload) {
+                            // No fue recarga: eliminar cartas
+                            localStorage.removeItem("selectedCards");
+                            console.log("Cartas borradas por salida real del sitio.");
+                        } else {
+                            console.log("Recarga detectada, no se borran las cartas.");
+                        }
+                    }, 1000);
+                } else if (document.visibilityState === "visible") {
+                    clearTimeout(unloadTimer);
+                    // 3. Limpiar bandera al volver
+                    sessionStorage.removeItem("isReload");
+                }
+            });
+
+            // 4. También al cargar la página, limpia la bandera por si quedó
+            window.addEventListener("load", () => {
+                sessionStorage.removeItem("isReload");
+            });
+
 
         </script>
     </body>

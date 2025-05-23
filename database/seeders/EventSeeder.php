@@ -21,7 +21,7 @@ class EventSeeder extends Seeder
                 "details" => "Torneo en formato OP10. Aplican bans oficiales de Bandai.",
                 "inscritos" => "",
                 "participantes" => 16 ,
-                "user_id" => 1
+                "user_id" => 2
             ],
             [
                 "name" => "Lorcana Local",
@@ -30,7 +30,7 @@ class EventSeeder extends Seeder
                 "details" => "Torneo en formato Archazia's Island. Aplican bans oficiales de Ravensburg.",
                 "inscritos" => "",
                 "participantes" => 16,
-                "user_id" => 1
+                "user_id" => 2
             ],
             [
                 "name" => "Magic Commander",
@@ -39,7 +39,7 @@ class EventSeeder extends Seeder
                 "details" => "Torneo con mazos budget (100€ máx). Para conocer el precio de tu mazo introducirlo en la app Manabox y regirse por el mínimo. Pasar el precio por artes alternativos no importa.",
                 "inscritos" => "",
                 "participantes" => 16,
-                "user_id" => 1
+                "user_id" => 2
             ],
         ];
 

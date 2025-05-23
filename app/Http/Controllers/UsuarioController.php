@@ -46,14 +46,17 @@ class UsuarioController extends Controller
             $productos = [];
 
             foreach ($all_productos as $producto) {
-                $productos[] = [
-                    'id' => $producto->id,
-                    'nombre' => $producto->nombre,
-                    'descripcion' => $producto->descripcion,
-                    'precio' => $producto->precio,
-                    'cantidad' => $producto->cantidad,
-                    'user_name' => optional($producto->user)->name ?? 'Desconocido'
-                ];
+                if ($producto->estado === 'verificado' && $producto->user_id != 1) {
+                    $productos[] = [
+                        'id' => $producto->id,
+                        'nombre' => $producto->nombre,
+                        'descripcion' => $producto->descripcion,
+                        'precio' => $producto->precio,
+                        'cantidad' => $producto->cantidad,
+                        'user_name' => optional($producto->user)->name ?? 'Desconocido'
+                    ];
+                }
+
             }
             return view("usuario.usuario_tienda", compact('productos'));
         }

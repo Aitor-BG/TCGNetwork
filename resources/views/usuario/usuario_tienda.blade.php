@@ -17,6 +17,13 @@
                 max-height: 100vh;
                 overflow-y: auto;
             }
+
+            .productos-scroll {
+                max-height: 80vh;
+                /* Ajusta según tu diseño */
+                overflow-y: auto;
+                padding-right: 10px;
+            }
         </style>
     </head>
 
@@ -48,7 +55,7 @@
                         </div>
                     </div>
 
-                    <div class="row">
+                    <div class="row productos-scroll">
                         @foreach ($productos as $producto)
                             <div class="col-md-4 mb-4 producto" data-nombre="{{ strtolower($producto['nombre']) }}"
                                 data-tienda="{{ strtolower($producto['user_name']) }}"
@@ -79,11 +86,11 @@
 
                 <!-- Carrito -->
                 <div class="col-md-3 carrito">
-                    <h4><x-bi-cart/>Carrito</h4>
+                    <h4><x-bi-cart />Carrito</h4>
                     <ul id="lista-carrito" class="list-group mb-3"></ul>
                     <p><strong>Total: <span id="total">0</span> €</strong></p>
                     @php
-                    $route = Auth::user()->role.'.carrito'
+                        $route = Auth::user()->role . '.carrito'
                     @endphp
                     <a class="btn btn-success btn-sm" href="{{ route($route) }}">Hacer pedido</a>
                     <button class="btn btn-danger btn-sm" onclick="vaciarCarrito()">Vaciar carrito</button>
@@ -92,72 +99,111 @@
         </div>
 
         <script>
-    function obtenerCarrito() {
-        return JSON.parse(sessionStorage.getItem('carrito')) || [];
-    }
+            function obtenerCarrito() {
+                return JSON.parse(sessionStorage.getItem('carrito')) || [];
+            }
 
-    function guardarCarrito(carrito) {
-        sessionStorage.setItem('carrito', JSON.stringify(carrito));
-    }
+            function guardarCarrito(carrito) {
+                sessionStorage.setItem('carrito', JSON.stringify(carrito));
+            }
 
-    function renderizarCarrito() {
-        const carrito = obtenerCarrito();
-        const lista = document.getElementById('lista-carrito');
-        const totalElem = document.getElementById('total');
+            function renderizarCarrito() {
+                const carrito = obtenerCarrito();
+                const lista = document.getElementById('lista-carrito');
+                const totalElem = document.getElementById('total');
 
-        if (!lista || !totalElem) return;
+                if (!lista || !totalElem) return;
 
-        lista.innerHTML = '';
-        let total = 0;
+                lista.innerHTML = '';
+                let total = 0;
 
-        carrito.forEach((item, index) => {
-            total += parseFloat(item.precio);
-            const li = document.createElement('li');
-            li.classList.add('list-group-item', 'd-flex', 'justify-content-between', 'align-items-center');
-            li.innerHTML = `
+                carrito.forEach((item, index) => {
+                    total += parseFloat(item.precio);
+                    const li = document.createElement('li');
+                    li.classList.add('list-group-item', 'd-flex', 'justify-content-between', 'align-items-center');
+                    li.innerHTML = `
                 ${item.nombre} - ${item.precio}€
                 <button class="btn btn-sm btn-danger" onclick="eliminarDelCarrito(${index})">✕</button>
             `;
-            lista.appendChild(li);
-        });
+                    lista.appendChild(li);
+                });
 
-        totalElem.textContent = total.toFixed(2);
-    }
+                totalElem.textContent = total.toFixed(2);
+            }
 
-    function eliminarDelCarrito(index) {
-        const carrito = obtenerCarrito();
-        carrito.splice(index, 1);
-        guardarCarrito(carrito);
-        renderizarCarrito();
-    }
-
-    function vaciarCarrito() {
-        sessionStorage.removeItem('carrito');
-        renderizarCarrito();
-    }
-
-    document.addEventListener('DOMContentLoaded', () => {
-        // Botones "Agregar al carrito"
-        document.querySelectorAll('.agregar-carrito').forEach(btn => {
-            btn.addEventListener('click', () => {
-                const producto = {
-                    id: btn.dataset.id,
-                    nombre: btn.dataset.nombre,
-                    precio: btn.dataset.precio
-                };
+            function eliminarDelCarrito(index) {
                 const carrito = obtenerCarrito();
-                carrito.push(producto);
+                carrito.splice(index, 1);
                 guardarCarrito(carrito);
                 renderizarCarrito();
-            });
-        });
+            }
 
-        renderizarCarrito();
-    });
+            function vaciarCarrito() {
+                sessionStorage.removeItem('carrito');
+                renderizarCarrito();
+            }
+
+            document.addEventListener('DOMContentLoaded', () => {
+                const filtroNombre = document.getElementById('filtro-nombre');
+                const filtroTienda = document.getElementById('filtro-tienda');
+                const filtroPrecioMin = document.getElementById('filtro-precio-min');
+                const filtroPrecioMax = document.getElementById('filtro-precio-max');
+
+                const productos = document.querySelectorAll('.producto');
+
+                function filtrarProductos() {
+                    const nombre = filtroNombre.value.toLowerCase();
+                    const tienda = filtroTienda.value.toLowerCase();
+                    const precioMin = parseFloat(filtroPrecioMin.value) || 0;
+                    const precioMax = parseFloat(filtroPrecioMax.value) || Infinity;
+
+                    productos.forEach(producto => {
+                        const nombreProd = producto.dataset.nombre;
+                        const tiendaProd = producto.dataset.tienda;
+                        const precioProd = parseFloat(producto.dataset.precio);
+
+                        const coincideNombre = nombreProd.includes(nombre);
+                        const coincideTienda = tiendaProd.includes(tienda);
+                        const coincidePrecio = precioProd >= precioMin && precioProd <= precioMax;
+
+                        if (coincideNombre && coincideTienda && coincidePrecio) {
+                            producto.style.display = 'block';
+                        } else {
+                            producto.style.display = 'none';
+                        }
+                    });
+                }
+
+                // Escuchar cambios en todos los inputs
+                [filtroNombre, filtroTienda, filtroPrecioMin, filtroPrecioMax].forEach(input => {
+                    input.addEventListener('input', filtrarProductos);
+                });
+            });
+
+
+            document.addEventListener('DOMContentLoaded', () => {
+                // Botones "Agregar al carrito"
+                document.querySelectorAll('.agregar-carrito').forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        const producto = {
+                            id: btn.dataset.id,
+                            nombre: btn.dataset.nombre,
+                            precio: btn.dataset.precio
+                        };
+                        const carrito = obtenerCarrito();
+                        carrito.push(producto);
+                        guardarCarrito(carrito);
+                        renderizarCarrito();
+                    });
+                });
+
+                renderizarCarrito();
+            });
 
         </script>
 
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     </body>
+
     </html>
 </x-app-layout>

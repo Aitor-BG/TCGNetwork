@@ -19,28 +19,29 @@
             <div class="row">
                 @foreach ($productos as $producto)
                     <!--@if($producto['user_name'] === Auth::user()->username)-->
-                        <div class="col-md-4 mb-4">
-                            <div class="card" style="width: 100%;">
-                                <img src="..." class="card-img-top" alt="Imagen del producto">
-                                <div class="card-body text-center">
-                                    <h4 class="card-title">{{ $producto['nombre'] }}</h4>
-                                    <p class="card-text">{{ $producto['descripcion'] }}</p>
-                                    <p>{{ $producto['precio'] }}€</p>
-                                    @if ($producto['cantidad'] < 5)
-                                        <p style="color: red;">Últimas unidades</p>
-                                    @endif
+                    <div class="col-md-4 mb-4">
+                        <div class="card" style="width: 100%;">
+                            <!--<img src="{{ $producto['imagen'] }}" class="card-img-top" alt="Imagen del producto">-->
+                            <img src="{{ asset('storage/' . $producto['imagen']) }}" class="card-img-top" alt="Imagen del producto">
+                            <div class="card-body text-center">
+                                <h4 class="card-title">{{ $producto['nombre'] }}</h4>
+                                <p class="card-text">{{ $producto['descripcion'] }}</p>
+                                <p>{{ $producto['precio'] }}€</p>
+                                @if ($producto['cantidad'] < 5)
+                                    <p style="color: red;">Últimas unidades</p>
+                                @endif
 
-                                    <div class="d-flex justify-content-center align-items-center gap-2">
-                                        <button class="btn btn-danger btn-sm"
-                                            onclick="actualizarStock({{ $producto['id'] }}, 'disminuir', this)">-</button>
-                                        <span id="cantidad-{{ $producto['id'] }}">{{ $producto['cantidad'] }}</span>
-                                        <button class="btn btn-success btn-sm"
-                                            onclick="actualizarStock({{ $producto['id'] }}, 'incrementar', this)">+</button>
-                                    </div>
+                                <div class="d-flex justify-content-center align-items-center gap-2">
+                                    <button class="btn btn-danger btn-sm"
+                                        onclick="actualizarStock({{ $producto['id'] }}, 'disminuir', this)">-</button>
+                                    <span id="cantidad-{{ $producto['id'] }}">{{ $producto['cantidad'] }}</span>
+                                    <button class="btn btn-success btn-sm"
+                                        onclick="actualizarStock({{ $producto['id'] }}, 'incrementar', this)">+</button>
                                 </div>
-
                             </div>
+
                         </div>
+                    </div>
                     <!--@endif-->
                 @endforeach
             </div>
@@ -50,7 +51,7 @@
         <div class="modal fade" id="createProductModal" tabindex="-1" aria-labelledby="createProductModalLabel"
             aria-hidden="true">
             <div class="modal-dialog">
-                <form method="POST" action="{{ route('tienda.producto.store') }}">
+                <form method="POST" action="{{ route('tienda.producto.store') }}" enctype="multipart/form-data">
                     @csrf
                     <div class="modal-content">
                         <div class="modal-header">
@@ -75,6 +76,11 @@
                             <div class="mb-3">
                                 <label for="cantidad" class="form-label">Cantidad en stock</label>
                                 <input type="number" name="cantidad" class="form-control" id="cantidad" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="imagen" class="form-label">Imagen</label>
+                                <input type="file" name="imagen" class="form-control" id="imagen"
+                                    accept=".jpg, .jpeg, .png" required>
                             </div>
                         </div>
                         <div class="modal-footer">

@@ -50,7 +50,8 @@ class TiendaController extends Controller
                     'descripcion' => $producto->descripcion,
                     'precio' => $producto->precio,
                     'cantidad' => $producto->cantidad,
-                    'user_name' => optional($producto->user)->name ?? 'Desconocido'
+                    'user_name' => optional($producto->user)->name ?? 'Desconocido',
+                    'imagen' => $producto->imagen
                 ];
             }
 
@@ -60,7 +61,25 @@ class TiendaController extends Controller
 
     public function TiendaTercera()
     {
-        return view("tienda.tienda_distribuidora");
+        $all_productos = Producto::all();
+
+        $productos = [];
+
+        foreach ($all_productos as $producto) {
+            if ($producto->estado === 'verificado' && $producto->user_id === 1) {
+                $productos[] = [
+                    'id' => $producto->id,
+                    'nombre' => $producto->nombre,
+                    'descripcion' => $producto->descripcion,
+                    'precio' => $producto->precio,
+                    'cantidad' => $producto->cantidad,
+                    'user_name' => optional($producto->user)->name ?? 'Desconocido',
+                    'imagen' => $producto->imagen
+                ];
+            }
+
+        }
+        return view("tienda.tienda_distribuidora", compact('productos'));
     }
 
     public function TiendaTorneo()
@@ -130,22 +149,28 @@ class TiendaController extends Controller
 
     public function crearProducto(Request $request)
     {
-        $validated = $request->validate([
+        $request->validate([
             'nombre' => 'required|string|max:255',
             'descripcion' => 'required|string',
-            'precio' => 'required|numeric|min:0',
-            'cantidad' => 'required|integer|min:0',
+            'precio' => 'required|numeric',
+            'cantidad' => 'required|integer',
+            'imagen' => 'required|image|mimes:jpg,jpeg,png|max:2048',
         ]);
 
-        $producto = new Producto();
-        $producto->nombre = $validated['nombre'];
-        $producto->descripcion = $validated['descripcion'];
-        $producto->precio = $validated['precio'];
-        $producto->cantidad = $validated['cantidad'];
-        $producto->user_id = auth()->id();
-        $producto->save();
+        // Guardar imagen en storage/app/public/productos
+        $path = $request->file('imagen')->store('productos', 'public');
 
-        return redirect()->back()->with('success', 'Producto creado correctamente.');
+        Producto::create([
+            'nombre' => $request->nombre,
+            'descripcion' => $request->descripcion,
+            'precio' => $request->precio,
+            'cantidad' => $request->cantidad,
+            'imagen' => $path,
+            'user_id' => auth()->id(),
+            'estado' => 'revision',
+        ]);
+
+        return redirect()->back()->with('success', 'Producto creado correctamente');
     }
 
 
