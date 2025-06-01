@@ -318,7 +318,7 @@
                 if (!selectedEvent) return;
 
                 document.getElementById('edit_title').value = selectedEvent.title;
-                document.getElementById('edit_color').value = selectedEvent.backgroundColor || '#000000';
+                document.getElementById('edit_color').value = selectedEvent.color || '#000000';
                 document.getElementById('edit_description').value = selectedEvent.extendedProps.details || '';
                 document.getElementById('edit_participantes').value = selectedEvent.extendedProps.participantes || 0;
                 document.getElementById('edit_date').value = selectedEvent.startStr;

@@ -61,7 +61,7 @@
                                 data-tienda="{{ strtolower($producto['user_name']) }}"
                                 data-precio="{{ $producto['precio'] }}">
                                 <div class="card">
-                                    <img src="..." class="card-img-top" alt="Imagen del producto">
+                                    <img src="{{ asset('storage/' . $producto['imagen']) }}" class="card-img-top" alt="Imagen del producto">
                                     <div class="card-body">
                                         <h5 class="card-title">{{ $producto['nombre'] }}</h5>
                                         <p class="card-text">{{ $producto['descripcion'] }}</p>

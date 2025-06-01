@@ -51,23 +51,25 @@
                         @endswitch
                     </x-nav-link>
                 </div>
+                @unless($role === 'tienda')
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                    <x-nav-link :href="route($route3)" :active="request()->routeIs('$route3')">
+                    <x-nav-link :href="route($route3)" :active="request()->routeIs($route3)">
                         @switch($role)
-                            @case('tienda')
-                                {{ __('Distribuidora') }}
-                                @break
                             @case('usuario')
                                 {{ __('Tienda') }}
                                 @break
+
                             @case('admin')
                                 {{ __('Logs') }}
                                 @break
+
                             @default
                                 {{ __('Inicio') }}
                         @endswitch
                     </x-nav-link>
                 </div>
+                @endunless
+
 
             </div>
 

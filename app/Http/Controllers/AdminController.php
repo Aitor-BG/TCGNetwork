@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Event;
 use App\Models\User;
 use App\Models\Producto;
+use App\Models\Activity;
 use App\Models\Torneo;
 
 class AdminController extends Controller
@@ -65,7 +66,8 @@ class AdminController extends Controller
 
     public function AdminTercera()
     {
-        return view("admin.admin_logs");
+    $logs = Activity::with('causer', 'subject')->latest()->paginate(10);
+    return view("admin.admin_logs", compact('logs'));
     }
 
 

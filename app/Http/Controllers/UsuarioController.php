@@ -53,7 +53,8 @@ class UsuarioController extends Controller
                         'descripcion' => $producto->descripcion,
                         'precio' => $producto->precio,
                         'cantidad' => $producto->cantidad,
-                        'user_name' => optional($producto->user)->name ?? 'Desconocido'
+                        'user_name' => optional($producto->user)->name ?? 'Desconocido',
+                        'imagen' => $producto->imagen
                     ];
                 }
 
@@ -100,6 +101,9 @@ class UsuarioController extends Controller
 
         if ($request->has('name')) {
             $query['name'] = $request->input('name');
+        }
+        if ($request->has('code')) {
+            $query['code'] = $request->input('code');
         }
         if ($request->has('type')) {
             $query['type'] = $request->input('type');
@@ -174,8 +178,11 @@ class UsuarioController extends Controller
         if ($request->has('name')) {
             $query['name'] = $request->input('name');
         }
-        if ($request->has('cardType')) {
-            $query['cardType'] = $request->input('cardType');
+        if ($request->has('code')) {
+            $query['code'] = $request->input('code');
+        }
+        if ($request->has('type')) {
+            $query['type'] = $request->input('type');
         }
         if ($request->has('color')) {
             $query['color'] = $request->input('color');
@@ -210,6 +217,9 @@ class UsuarioController extends Controller
         if ($request->has('name')) {
             $query['name'] = $request->input('name');
         }
+        if ($request->has('code')) {
+            $query['code'] = $request->input('code');
+        }
 
         $url = 'https://apitcg.com/api/digimon/cards?' . http_build_query($query);
 
@@ -237,6 +247,15 @@ class UsuarioController extends Controller
 
         if ($request->has('name')) {
             $query['name'] = $request->input('name');
+        }
+        if ($request->has('code')) {
+            $query['code'] = $request->input('code');
+        }
+        if ($request->has('cardType')) {
+            $query['cardType'] = $request->input('cardType');
+        }
+        if ($request->has('color')) {
+            $query['color'] = $request->input('color');
         }
 
         $url = 'https://apitcg.com/api/gundam/cards?' . http_build_query($query);
