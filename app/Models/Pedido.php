@@ -30,7 +30,13 @@ class Pedido extends Model
     public function getActivitylogOptions(): LogOptions
     {
         return LogOptions::defaults()
-            ->logOnly(['jugador1', 'jugador2', 'ronda'])->logOnlyDirty();
+            ->logOnly(['nombre',
+        'direccion',
+        'ciudad',
+        'codigo-postal',
+        'telefono',
+        'contenido',
+        'user_id',])->logOnlyDirty();
     }
 
     public function user()

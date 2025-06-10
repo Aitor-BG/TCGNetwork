@@ -274,7 +274,7 @@ class UsuarioController extends Controller
     }
 
 
-public function guardarPedido(Request $request)
+/*public function guardarPedido(Request $request)
 {
     $validated = $request->validate([
         'nombre' => 'required|string|max:255',
@@ -293,6 +293,49 @@ public function guardarPedido(Request $request)
     $pedido->telefono = $validated['telefono'];
     $pedido->contenido = json_encode($validated['contenido']);
     $pedido->save();
+
+    return response()->json(['message' => 'Pedido realizado con éxito']);
+}*/
+public function guardarPedido(Request $request)
+{
+    $validated = $request->validate([
+        'nombre' => 'required|string|max:255',
+        'direccion' => 'required|string|max:255',
+        'ciudad' => 'required|string|max:255',
+        'codigo-postal' => 'required|integer',
+        'telefono' => 'required|integer',
+        'contenido' => 'required|array',
+    ]);
+
+    // Guardar el pedido
+    $pedido = new Pedido();
+    $pedido->nombre = $validated['nombre'];
+    $pedido->direccion = $validated['direccion'];
+    $pedido->ciudad = $validated['ciudad'];
+    $pedido->{'codigo-postal'} = $validated['codigo-postal'];
+    $pedido->telefono = $validated['telefono'];
+    $pedido->contenido = json_encode($validated['contenido']);
+    $pedido->save();
+
+    // Actualizar stock de los productos
+    foreach ($validated['contenido'] as $item) {
+        $producto = Producto::find($item['id']);
+        if ($producto) {
+            // Asegúrate de que haya una propiedad "cantidad" en el producto
+            // Y que el item traiga la cantidad deseada (por defecto 1 si no hay)
+            $cantidadComprada = $item['cantidad'] ?? 1;
+
+            if ($producto->cantidad >= $cantidadComprada) {
+                $producto->cantidad -= $cantidadComprada;
+                $producto->save();
+            } else {
+                // Podrías devolver un error si no hay stock suficiente
+                return response()->json([
+                    'message' => "No hay suficiente stock para el producto: " . $producto->nombre
+                ], 400);
+            }
+        }
+    }
 
     return response()->json(['message' => 'Pedido realizado con éxito']);
 }

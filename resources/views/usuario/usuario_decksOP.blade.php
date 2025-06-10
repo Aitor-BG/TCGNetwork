@@ -321,7 +321,7 @@
                 const url = URL.createObjectURL(blob);
                 const a = document.createElement("a");
                 a.href = url;
-                a.download = "mi_deck.deck";
+                a.download = "mi_deck.txt";
                 a.click();
                 URL.revokeObjectURL(url);
             }
