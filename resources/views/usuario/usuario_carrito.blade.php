@@ -107,7 +107,7 @@
                 renderizarCarrito();
             }*/
 
-            function vaciarCarrito() {
+            /*function vaciarCarrito() {
                 const carrito = obtenerCarrito();
 
                 fetch('/usuario/tienda/carrito/compra', {
@@ -133,7 +133,58 @@
                         console.error(err);
                         alert('Hubo un error al procesar tu compra');
                     });
-            }
+            }*/
+
+            function vaciarCarrito() {
+    const carrito = obtenerCarrito();
+
+    if (carrito.length === 0) {
+        alert('El carrito está vacío.');
+        return;
+    }
+
+    const nombre = document.getElementById('nombre').value.trim();
+    const direccion = document.getElementById('direccion').value.trim();
+    const ciudad = document.getElementById('ciudad').value.trim();
+    const codigo_postal = document.getElementById('cp').value.trim();
+    const telefono = document.getElementById('telefono').value.trim();
+
+    if (!nombre || !direccion || !ciudad || !codigo_postal || !telefono) {
+        alert("Completa todos los campos de facturación.");
+        return;
+    }
+
+    fetch('/guardar-pedido', {
+        method: 'POST',
+        headers: {
+            'X-CSRF-TOKEN': '{{ csrf_token() }}',
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            nombre: nombre,
+            direccion: direccion,
+            ciudad: ciudad,
+            'codigo-postal': codigo_postal,
+            telefono: telefono,
+            contenido: carrito
+        })
+    })
+        .then(res => {
+            if (!res.ok) throw new Error('Error procesando la compra');
+            return res.json();
+        })
+        .then(data => {
+            alert(data.message);
+            sessionStorage.removeItem('carrito');
+            renderizarCarrito();
+            window.location.href = "{{ route($route) }}";
+        })
+        .catch(err => {
+            console.error(err);
+            alert('Hubo un error al procesar tu compra');
+        });
+}
+
 
 
 

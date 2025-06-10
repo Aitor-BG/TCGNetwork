@@ -23,6 +23,7 @@ return new class extends Migration
             $table->text('inscritos')->nullable();
             $table->integer('participantes')->nullable();
             $table->boolean('en_curso')->default(false);
+            $table->integer('ronda')->default(0);
             $table->enum('estado', ['revision', 'verificado'])->default('revision');
             $table->timestamps();
         });

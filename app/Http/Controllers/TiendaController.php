@@ -216,7 +216,7 @@ class TiendaController extends Controller
         ]);
     }
 
-    public function siguienteRonda(Request $request, $event_id)
+    /*public function siguienteRonda(Request $request, $event_id)
     {
         $event = Event::findOrFail($event_id);
 
@@ -282,7 +282,7 @@ class TiendaController extends Controller
             $byePlayer = $jugadores->first();
             $emparejamientos[] = [$byePlayer->competidor, null];
 
-            if ($byePlayer->bye == 0) {
+            if ($byePlayer->bye == 0) { //$ronda_actual>=1
                 $byePlayer->puntos += 3;
                 $byePlayer->bye = 1;
                 $byePlayer->save();
@@ -301,7 +301,113 @@ class TiendaController extends Controller
         }
 
         return redirect()->back()->with('success', 'Resultados guardados y nueva ronda generada');
+    }*/
+
+    public function siguienteRonda(Request $request, $event_id)
+{
+    $event = Event::findOrFail($event_id);
+    $rondaActual = $event->ronda;
+    $nuevaRonda = $rondaActual + 1;
+
+    // Obtener los jugadores ordenados por puntos y porcentaje2
+    $jugadores = Torneo::where('event_id', $event_id)
+        ->orderByDesc('puntos')
+        ->orderByDesc('porcentaje1')
+        ->orderByDesc('porcentaje2')
+        ->get();
+
+    // Crear emparejamientos por pares
+    for ($i = 0; $i < count($jugadores); $i += 2) {
+        if (isset($jugadores[$i + 1])) {
+            // Crear partida entre jugador[i] y jugador[i+1]
+            Partida::create([
+                'event_id' => $event_id,
+                'ronda' => $nuevaRonda,
+                'jugador1' => $jugadores[$i]->competidor,
+                'jugador2' => $jugadores[$i + 1]->competidor,
+                'ganador' => null,
+            ]);
+        } else {
+            // Jugador impar: bye (victoria automática)
+            Partida::create([
+                'event_id' => $event_id,
+                'ronda' => $nuevaRonda,
+                'jugador1' => $jugadores[$i]->competidor,
+                'jugador2' => null,
+                'ganador' => $jugadores[$i]->competidor,
+            ]);
+
+            $jugadores[$i]->victorias += 1;
+            $jugadores[$i]->puntos += 3;
+            $jugadores[$i]->save();
+        }
     }
+
+    // Actualizar número de rondas en el evento
+    $event->ronda = $nuevaRonda;
+    $event->save();
+
+    // Cálculo de porcentajes de desempate (DCI 2023)
+    $torneos = Torneo::where('event_id', $event_id)->get();
+    $partidas = Partida::where('event_id', $event_id)->get();
+
+    foreach ($torneos as $jugador) {
+        $totalPartidas = $partidas->filter(function ($p) use ($jugador) {
+            return $p->jugador1 === $jugador->competidor || $p->jugador2 === $jugador->competidor;
+        });
+
+        $jugadas = $totalPartidas->count();
+        $victorias = $jugador->victorias;
+
+        // Porcentaje 1 (Match Win %)
+        $porcentaje1 = $jugadas > 0 ? ($victorias / $jugadas) * 100 : 0;
+
+        // Obtener oponentes
+        $oponentes = [];
+        foreach ($totalPartidas as $p) {
+            if ($p->jugador1 === $jugador->competidor && $p->jugador2) {
+                $oponentes[] = $p->jugador2;
+            } elseif ($p->jugador2 === $jugador->competidor && $p->jugador1) {
+                $oponentes[] = $p->jugador1;
+            }
+        }
+
+        $porcentajeOponentes = [];
+
+        foreach ($oponentes as $oponente) {
+            $oponenteStats = Torneo::where('event_id', $event_id)
+                ->where('competidor', $oponente)
+                ->first();
+
+            if ($oponenteStats) {
+                $oponentePartidas = $partidas->filter(function ($p) use ($oponente) {
+                    return $p->jugador1 === $oponente || $p->jugador2 === $oponente;
+                });
+
+                $oponenteJugadas = $oponentePartidas->count();
+                $oponenteVictorias = $oponenteStats->victorias;
+
+                if ($oponenteJugadas > 0) {
+                    $winRate = $oponenteVictorias / $oponenteJugadas;
+                    $winRate = max($winRate, 0.33); // mínimo del 33%
+                    $porcentajeOponentes[] = $winRate * 100;
+                }
+            }
+        }
+
+        $porcentaje2 = count($porcentajeOponentes) > 0
+            ? array_sum($porcentajeOponentes) / count($porcentajeOponentes)
+            : 0;
+
+        // Guardar los porcentajes
+        $jugador->porcentaje1 = round($porcentaje1, 2);
+        $jugador->porcentaje2 = round($porcentaje2, 2);
+        $jugador->save();
+    }
+
+    return redirect()->back()->with('success', 'Nueva ronda generada correctamente.');
+}
+
     public function mostrarClasificacionFinal($id)
     {
         $event = Event::findOrFail($id);

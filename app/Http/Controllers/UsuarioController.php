@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use App\Models\Event;
 use App\Models\Producto;
+use App\Models\Pedido;
 
 class UsuarioController extends Controller
 {
@@ -271,4 +272,29 @@ class UsuarioController extends Controller
             return response()->json(['error' => 'Error al conectarse con la API'], 500);
         }
     }
+
+
+public function guardarPedido(Request $request)
+{
+    $validated = $request->validate([
+        'nombre' => 'required|string|max:255',
+        'direccion' => 'required|string|max:255',
+        'ciudad' => 'required|string|max:255',
+        'codigo-postal' => 'required|integer',
+        'telefono' => 'required|integer',
+        'contenido' => 'required|array',
+    ]);
+
+    $pedido = new Pedido();
+    $pedido->nombre = $validated['nombre'];
+    $pedido->direccion = $validated['direccion'];
+    $pedido->ciudad = $validated['ciudad'];
+    $pedido->{'codigo-postal'} = $validated['codigo-postal'];
+    $pedido->telefono = $validated['telefono'];
+    $pedido->contenido = json_encode($validated['contenido']);
+    $pedido->save();
+
+    return response()->json(['message' => 'Pedido realizado con éxito']);
+}
+
 }

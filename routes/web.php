@@ -60,6 +60,8 @@ Route::middleware(['auth', 'role:usuario'])->group(function () {
     Route::get('/usuario/decksDB', [UsuarioController::class, 'apiDragonBall'])->name('usuario.decksDB');
     Route::get('/usuario/decksDG', [UsuarioController::class, 'apiDigimon'])->name('usuario.decksDG');
     Route::get('/usuario/decksGD', [UsuarioController::class, 'apiGundam'])->name('usuario.decksGD');
+    Route::post('/guardar-pedido', [UsuarioController::class, 'guardarPedido'])->name('pedido.guardar');
+
 });
 
 Route::middleware(['auth', 'role:admin'])->group(function () {
